@@ -252,7 +252,7 @@ test('notificarile ajung doar la cei implicati in proiect', async () => {
   assert.ok(await count('member', 'Evaluare%') >= 2, 'echipa nu a primit nota');
   for (const who of ['stranger', 'prof2', 'admin']) assert.equal(await count(who, '%'), 0, `${who} a primit notificari straine`);
   // "outsider" a fost adaugat temporar in echipa de lider: primeste exact acea notificare, nimic despre proiect
-  assert.equal(await count('outsider', 'Ai fost adaugat%'), 1);
+  assert.equal(await count('outsider', 'Ai fost adăugat%'), 1);
   assert.equal(await count('outsider', 'Evaluare%') + await count('outsider', 'Comentariu%'), 0);
 });
 
