@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
+import { isShowcase } from '../common/showcase';
 
 // Orice text dinamic (nume, titluri, mesaje scrise de utilizatori) se escapeaza inainte sa ajunga in HTML:
 // altfel un comentariu sau un mesaj de chat ar putea injecta linkuri sau formulare in emailuri "oficiale"
@@ -19,9 +20,10 @@ export class MailService {
     const user = this.configService.get('MAIL_USER');
     const host = this.configService.get('MAIL_HOST');
     if (!user) {
-      // Fara cont de email configurat (ex. cineva care cloneaza proiectul): in dezvoltare emailurile se afiseaza
-      // in consola, ca aplicatia sa poata fi testata; in productie e o eroare de configurare
-      if (this.configService.get('NODE_ENV') === 'production') this.logger.error('MAIL_USER lipseste: emailurile nu pot fi trimise');
+      // Fara cont de email configurat: in dezvoltare emailurile se afiseaza in consola, ca aplicatia sa poata fi
+      // testata; in productie nu se trimit si nici nu se scriu in jurnal (ar contine adresele si datele vizitatorilor).
+      // In demo-ul public lipsa emailului e intentionata (conturile noi sunt activate direct).
+      if (this.configService.get('NODE_ENV') === 'production' && !isShowcase()) this.logger.error('MAIL_USER lipseste: emailurile nu pot fi trimise');
       this.transporter = nodemailer.createTransport({ jsonTransport: true });
       this.consoleOnly = true;
       return;
@@ -72,6 +74,7 @@ export class MailService {
   }
 
   private async send(to: string, subject: string, html: string, kind: string) {
+    if (this.consoleOnly && this.configService.get('NODE_ENV') === 'production') return;
     try {
       await this.transporter.sendMail({ from: `"UniProject Hub" <${this.configService.get('MAIL_FROM') || this.configService.get('MAIL_USER') || 'no-reply@localhost'}>`, to, subject, html });
       if (this.consoleOnly) {

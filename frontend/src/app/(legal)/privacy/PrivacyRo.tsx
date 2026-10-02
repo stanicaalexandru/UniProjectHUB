@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LEGAL, LAST_UPDATED } from "../legal";
+import { LEGAL, LAST_UPDATED, SENDS_EMAIL } from "../legal";
 
 export function PrivacyRo() {
   const mail = <a href={`mailto:${LEGAL.contactEmail}`}>{LEGAL.contactEmail}</a>;
@@ -105,13 +105,15 @@ export function PrivacyRo() {
           operatorului, prin baza de date, și nu este folosit în niciun scop. Conținutul unui proiect este vizibil doar membrilor echipei, creatorului și profesorului
           coordonator al acelui proiect.
         </li>
-        <li>
-          <strong>Furnizorul de email</strong>
-          {LEGAL.emailProvider ? <> (<strong>{LEGAL.emailProvider}</strong>)</> : <> (în configurația implicită, <strong>Google Gmail</strong>)</>}:
-          emailurile aplicației (confirmarea contului, resetarea parolei, bun venit, notificări) trec prin serverele
-          acestuia, deci el primește adresa ta de email, numele și conținutul mesajului. Furnizorul poate prelucra date
-          și în afara Spațiului Economic European, pe baza propriilor garanții (clauze contractuale standard).
-        </li>
+        {SENDS_EMAIL && (
+          <li>
+            <strong>Furnizorul de email</strong>
+            {LEGAL.emailProvider ? <> (<strong>{LEGAL.emailProvider}</strong>)</> : <> (în configurația implicită, <strong>Google Gmail</strong>)</>}:
+            emailurile aplicației (confirmarea contului, resetarea parolei, bun venit, notificări) trec prin serverele
+            acestuia, deci el primește adresa ta de email, numele și conținutul mesajului. Furnizorul poate prelucra date
+            și în afara Spațiului Economic European, pe baza propriilor garanții (clauze contractuale standard).
+          </li>
+        )}
         <li>
           <strong>Jitsi Meet</strong> (serviciul public meet.jit.si, operat de 8x8 Inc.), <strong>doar dacă folosești
           butonul „Apel video”</strong>: apelul se deschide pe serverul Jitsi, care primește numele tău afișat,
@@ -201,8 +203,8 @@ export function PrivacyRo() {
       <h2>9. Securitate</h2>
       <p>
         Parolele și PIN-urile sunt stocate doar sub formă de hash (bcrypt), codurile trimise pe email doar sub formă
-        de hash și expiră după 15 minute, iar sesiunile folosesc token-uri cu durată scurtă de viață. Adresa de email
-        este confirmată printr-un cod înainte de activarea contului. După 5 încercări greșite de parolă sau PIN,
+        de hash și expiră după 15 minute, iar sesiunile folosesc token-uri cu durată scurtă de viață.
+        {SENDS_EMAIL && " Adresa de email este confirmată printr-un cod înainte de activarea contului."} După 5 încercări greșite de parolă sau PIN,
         contul se blochează temporar, iar numărul de cereri pe care le poate face o adresă IP este limitat.
         Opțional, poți activa din Setări un <strong>PIN de securitate</strong>, cerut la autentificare după parolă.
         Totuși, nicio metodă de transmitere sau stocare nu este complet sigură, iar platforma este un proiect

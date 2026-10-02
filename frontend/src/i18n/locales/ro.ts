@@ -986,6 +986,7 @@ export const ro = {
       professor: "Intră ca profesor",
     },
     waking: "Serverul demo gratuit pornește la prima cerere după o perioadă fără vizitatori. Poate dura până la un minut, te rog așteaptă.",
+    registerNoticeNoEmail: "Cont demo: e activ imediat, fără cod pe email, și se șterge automat în cel mult 24 de ore, împreună cu tot ce creezi. Poți folosi o adresă de email inventată.",
     registerNotice: "Cont demo: se șterge automat în cel mult 24 de ore, împreună cu tot ce creezi. Emailul e folosit doar pentru codul de confirmare și pentru notificările aplicației.",
     professorNote: "În demo, conturile de profesor sunt active imediat după confirmarea emailului.",
     lockedSettings: "Contul demo e folosit de toți vizitatorii, așa că parola, PIN-ul și ștergerea contului sunt dezactivate. Creează-ți propriul cont ca să le încerci.",

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LEGAL, LAST_UPDATED } from "../legal";
+import { LEGAL, LAST_UPDATED, SENDS_EMAIL } from "../legal";
 
 export function PrivacyEn() {
   const mail = <a href={`mailto:${LEGAL.contactEmail}`}>{LEGAL.contactEmail}</a>;
@@ -105,13 +105,15 @@ export function PrivacyEn() {
           not used for any purpose. A project’s content is visible only to its team members, its creator and its
           coordinating professor.
         </li>
-        <li>
-          <strong>The email provider</strong>
-          {LEGAL.emailProvider ? <> (<strong>{LEGAL.emailProvider}</strong>)</> : <> (by default <strong>Google Gmail</strong>)</>}:
-          the application’s emails (account confirmation, password reset, welcome, notifications) pass through its
-          servers, so it receives your email address, name and the message content. The provider may process data
-          outside the European Economic Area under its own safeguards (standard contractual clauses).
-        </li>
+        {SENDS_EMAIL && (
+          <li>
+            <strong>The email provider</strong>
+            {LEGAL.emailProvider ? <> (<strong>{LEGAL.emailProvider}</strong>)</> : <> (by default <strong>Google Gmail</strong>)</>}:
+            the application’s emails (account confirmation, password reset, welcome, notifications) pass through its
+            servers, so it receives your email address, name and the message content. The provider may process data
+            outside the European Economic Area under its own safeguards (standard contractual clauses).
+          </li>
+        )}
         <li>
           <strong>Jitsi Meet</strong> (the public meet.jit.si service, operated by 8x8 Inc.), <strong>only if you
           use the “Video call” button</strong>: the call opens on the Jitsi server, which receives your display name,
@@ -196,8 +198,8 @@ export function PrivacyEn() {
       <h2>9. Security</h2>
       <p>
         Passwords and PINs are stored only as hashes (bcrypt), codes sent by email are stored only as hashes and
-        expire after 15 minutes, and sessions use short-lived tokens. Your email address is confirmed with a code
-        before the account is activated. After 5 wrong password or PIN attempts the account is temporarily locked,
+        expire after 15 minutes, and sessions use short-lived tokens.
+        {SENDS_EMAIL && " Your email address is confirmed with a code before the account is activated."} After 5 wrong password or PIN attempts the account is temporarily locked,
         and the number of requests an IP address can make is limited. Optionally, you can enable a
         <strong> security PIN</strong> in Settings, requested at sign-in after your password. However, no method of
         transmission or storage is completely secure, and the platform is an academic and portfolio project, not a

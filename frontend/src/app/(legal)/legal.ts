@@ -11,4 +11,8 @@ export const LEGAL = {
   showcase: process.env.NEXT_PUBLIC_SHOWCASE === "true",
 };
 
+// Demo-ul public functioneaza si fara server de email: atunci nu se trimit emailuri si conturile nu se confirma prin cod.
+// La activarea emailurilor in demo se completeaza si NEXT_PUBLIC_LEGAL_EMAIL_PROVIDER.
+export const SENDS_EMAIL = !LEGAL.showcase || !!LEGAL.emailProvider;
+
 export const LAST_UPDATED = { ro: "29 septembrie 2026", en: "29 September 2026" };

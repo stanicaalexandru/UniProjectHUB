@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { apiFetch, PENDING_EMAIL_KEY } from "@/lib/api";
-import { SHOWCASE, DEMO_ACCOUNTS, DEMO_PASSWORD } from "@/lib/showcase";
+import { SHOWCASE, DEMO_ACCOUNTS, DEMO_PASSWORD, useServerInfo } from "@/lib/showcase";
 import { useT, useErrorMessage } from "@/i18n";
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import { TextField } from "@/components/ui/Field";
@@ -31,6 +31,9 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [slow, setSlow] = useState(false);
+  // Fara server de email (demo) resetarea parolei prin cod nu e posibila
+  const serverInfo = useServerInfo();
+  const canResetPassword = serverInfo?.emailEnabled !== false;
 
   // Redirectionat aici dupa ce sesiunea a expirat (vezi authFetch)
   useEffect(() => {
@@ -155,7 +158,7 @@ export default function LoginPage() {
               <label className="flex items-center gap-2 text-slate-600 dark:text-slate-400 cursor-pointer">
                 <input type="checkbox" className="rounded" checked={rememberMe} onChange={e => setRememberMe(e.target.checked)} /> {t("auth.rememberMe")}
               </label>
-              <button type="button" onClick={() => { setResetEmail(email); go("forgot"); }} className="text-blue-700 dark:text-blue-400 hover:underline text-xs">{t("auth.forgotPassword")}</button>
+              {canResetPassword && <button type="button" onClick={() => { setResetEmail(email); go("forgot"); }} className="text-blue-700 dark:text-blue-400 hover:underline text-xs">{t("auth.forgotPassword")}</button>}
             </div>
             <button type="submit" disabled={loading} className="btn-primary w-full justify-center py-2.5 text-base">
               {loading ? <><Spinner /> {t("auth.loggingIn")}</> : t("auth.loginButton")}

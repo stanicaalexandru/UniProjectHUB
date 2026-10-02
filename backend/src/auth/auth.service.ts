@@ -11,7 +11,7 @@ import { NotificationsService } from '../notifications/notifications.service';
 import { NotificationType } from '../notifications/entities/notification.entity';
 import { generateCode, hashSecret, secretMatches, CODE_TTL_MS, MAX_CODE_ATTEMPTS } from './codes';
 import { appError } from '../common/errors';
-import { isShowcase } from '../common/showcase';
+import { isShowcase, skipsEmailVerification } from '../common/showcase';
 
 export interface TokenPair {
   accessToken: string;
@@ -39,7 +39,7 @@ export class AuthService {
     private notifications: NotificationsService,
   ) {}
 
-  async register(dto: RegisterInput): Promise<{ message: string; email: string }> {
+  async register(dto: RegisterInput): Promise<{ message: string; email: string } | TokenPair> {
     const role = SELF_SERVICE_ROLES.includes(dto.role) ? dto.role : UserRole.STUDENT;
     const existing = await this.userRepo.findOne({ where: { email: dto.email } });
     if (existing) throw new ConflictException(appError('EMAIL_TAKEN'));
@@ -60,6 +60,15 @@ export class AuthService {
       codeAttempts: 0,
     });
     await this.userRepo.save(user);
+
+    // Demo fara server de email: contul e activat direct si se deschide sesiunea
+    if (skipsEmailVerification()) {
+      await this.userRepo.update(user.id, {
+        status: UserStatus.ACTIVE, emailVerificationToken: null, emailVerificationExpires: null,
+      });
+      user.status = UserStatus.ACTIVE;
+      return this.generateTokens(user);
+    }
 
     try {
       await this.mailService.sendVerificationCode(dto.email, code, dto.firstName);

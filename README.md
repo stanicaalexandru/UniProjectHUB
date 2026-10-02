@@ -99,7 +99,8 @@ The live demo runs on free tiers: **Vercel** (frontend), **Render** (API, `rende
   by visitors) is reloaded from the seed on every start and every night.
 - The API start command (`npm run start:showcase`) applies the migrations, reloads the demo data, then starts the
   server. Render's free instances sleep when idle, so the first request after a quiet period can take up to a minute.
-- Emails go through any SMTP provider (`MAIL_HOST`, `MAIL_USER`, `MAIL_PASS`, `MAIL_FROM`).
+- Emails are optional and go through any SMTP provider (`MAIL_HOST`, `MAIL_USER`, `MAIL_PASS`, `MAIL_FROM`).
+  Without them, the demo activates new accounts right away (no email code) and hides the password reset.
 
 ## Quality checks
 

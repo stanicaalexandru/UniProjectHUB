@@ -988,6 +988,7 @@ export const en: typeof ro = {
       professor: "Sign in as professor",
     },
     waking: "The free demo server starts on the first request after a quiet period. It can take up to a minute, please wait.",
+    registerNoticeNoEmail: "Demo account: it's active immediately, with no email code, and is deleted automatically within 24 hours, together with everything you create. You can use a made-up email address.",
     registerNotice: "Demo account: it's deleted automatically within 24 hours, together with everything you create. Your email is used only for the confirmation code and the app's notifications.",
     professorNote: "In the demo, professor accounts are active right after email confirmation.",
     lockedSettings: "The demo account is shared by all visitors, so password, PIN and account deletion are disabled. Create your own account to try them.",

@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { apiFetch, PENDING_EMAIL_KEY } from "@/lib/api";
-import { SHOWCASE } from "@/lib/showcase";
+import { SHOWCASE, useServerInfo } from "@/lib/showcase";
 import { useT, useErrorMessage } from "@/i18n";
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import { TextField, SelectField } from "@/components/ui/Field";
@@ -16,6 +16,7 @@ const RESEND_COOLDOWN = 60;
 export default function RegisterPage() {
   const { t } = useT();
   const errorMessage = useErrorMessage();
+  const serverInfo = useServerInfo();
   const router = useRouter();
   const [form, setForm] = useState({ firstName: "", lastName: "", email: "", password: "", confirmPassword: "", faculty: "", role: "student" });
   const [acceptedTerms, setAcceptedTerms] = useState(false);
@@ -54,6 +55,13 @@ export default function RegisterPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- doar la prima incarcare
   }, []);
 
+  const startSession = (session: AuthSession) => {
+    localStorage.setItem("access_token", session.accessToken);
+    localStorage.setItem("refresh_token", session.refreshToken);
+    localStorage.setItem("user", JSON.stringify(session.user));
+    router.push("/dashboard");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (form.password !== form.confirmPassword) { setError(t("auth.passwordsDontMatch")); return; }
@@ -62,8 +70,10 @@ export default function RegisterPage() {
     setLoading(true); setError("");
     try {
       const { firstName, lastName, email, password, role, faculty } = form;
-      await apiFetch("/auth/register", { method: "POST", body: JSON.stringify({ firstName, lastName, email, password, role, faculty, acceptedTerms }) });
-      // Trece la ecranul de confirmare in loc sa autentifice direct
+      const data: AuthSession | { email: string } = await apiFetch("/auth/register", { method: "POST", body: JSON.stringify({ firstName, lastName, email, password, role, faculty, acceptedTerms }) });
+      // Demo fara server de email: contul e activ imediat si serverul deschide direct sesiunea
+      if ("accessToken" in data) { startSession(data); return; }
+      // Altfel trece la ecranul de confirmare cu codul primit pe email
       setStep("verify");
       setResendCooldown(RESEND_COOLDOWN);
     } catch (err) { setError(errorMessage(err)); }
@@ -78,10 +88,7 @@ export default function RegisterPage() {
       const data: AuthSession | { pendingApproval: true } = await apiFetch("/auth/verify-email", { method: "POST", body: JSON.stringify({ email: form.email, code }) });
       // Conturile de profesor nu primesc sesiune pana nu le aproba un administrator
       if ("pendingApproval" in data) { setStep("pending"); setLoading(false); return; }
-      localStorage.setItem("access_token", data.accessToken);
-      localStorage.setItem("refresh_token", data.refreshToken);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      router.push("/dashboard");
+      startSession(data);
     } catch (err) { setError(errorMessage(err)); setLoading(false); }
   };
 
@@ -115,7 +122,7 @@ export default function RegisterPage() {
       {step === "form" && (
         <>
           <h2 className="text-slate-800 dark:text-slate-100 text-xl font-bold mb-6">{t("auth.registerTitle")}</h2>
-          {SHOWCASE && <Alert kind="info" className="mb-4">{t("showcase.registerNotice")}</Alert>}
+          {SHOWCASE && <Alert kind="info" className="mb-4">{serverInfo?.emailEnabled === false ? t("showcase.registerNoticeNoEmail") : t("showcase.registerNotice")}</Alert>}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <TextField label={t("auth.firstName")} autoComplete="given-name" required value={form.firstName} onChange={e => set("firstName", e.target.value)} placeholder={t("auth.firstNamePlaceholder")} />

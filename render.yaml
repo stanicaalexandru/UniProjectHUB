@@ -47,7 +47,8 @@ services:
       # Address of the frontend on Vercel (CORS)
       - key: FRONTEND_URL
         sync: false
-      # Email sending (SMTP, e.g. Brevo)
+      # Optional email sending (SMTP, e.g. Brevo). Left empty, new demo accounts are activated without
+      # an email code; filling in MAIL_USER turns email verification back on.
       - key: MAIL_HOST
         sync: false
       - key: MAIL_PORT
