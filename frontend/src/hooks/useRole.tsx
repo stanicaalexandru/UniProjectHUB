@@ -1,4 +1,5 @@
 "use client";
+import { LockKeyhole } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useT } from "@/i18n";
 import type { User, UserRole } from "@/types";
@@ -52,7 +53,7 @@ export function RequireRole({ roles, children, fallback }: { roles: UserRole[], 
     return fallback ? <>{fallback}</> : (
       <div className="flex-1 flex items-center justify-center bg-slate-50 dark:bg-slate-950">
         <div className="text-center p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-sm">
-          <div className="text-5xl mb-4" aria-hidden="true">🔒</div>
+          <LockKeyhole className="w-10 h-10 mx-auto mb-4 text-slate-400 dark:text-slate-500" strokeWidth={1.5} aria-hidden="true" />
           <div className="text-lg font-bold dark:text-slate-100 mb-2">{t("access.restrictedTitle")}</div>
           <div className="text-sm text-slate-500 dark:text-slate-400">{t("access.restrictedText")}</div>
           <div className="mt-3 text-xs text-slate-500 dark:text-slate-400">{t("access.currentRole")} <span className="font-semibold">{t(`roles.${role}`)}</span></div>

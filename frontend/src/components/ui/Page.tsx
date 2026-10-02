@@ -1,9 +1,12 @@
-// Structura comuna a paginilor din aplicatie: antet cu titlu si actiuni, apoi continutul care se deruleaza
+import { BackButton } from "@/components/ui/BackButton";
+
+// Structura comuna a paginilor din aplicatie: antet cu sageata inapoi, titlu si actiuni, apoi continutul care se deruleaza
 
 export function PageHeader({ title, children }: { title: React.ReactNode; children?: React.ReactNode }) {
   return (
     <header className="page-header">
-      <h1 className="text-base font-semibold flex-1 min-w-0 truncate dark:text-slate-100">{title}</h1>
+      <BackButton />
+      <h1 className="text-base font-semibold flex-1 min-w-0 truncate -ml-2 dark:text-slate-100">{title}</h1>
       {children && <div className="flex flex-wrap items-center gap-2">{children}</div>}
     </header>
   );

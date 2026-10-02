@@ -6,10 +6,12 @@
   * { box-sizing: border-box; }
   html, body { height: 100%; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     @apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100;
   }
+  /* Titlurile folosesc varianta cu serife */
+  h1, h2 { font-family: var(--font-serif), Georgia, serif; }
   ::-webkit-scrollbar { width: 5px; height: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { @apply bg-slate-300 dark:bg-slate-700; border-radius: 10px; }
@@ -38,10 +40,10 @@
     @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold;
   }
   .sidebar-link {
-    @apply flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100 transition-all;
+    @apply flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-blue-200 dark:text-slate-400 hover:bg-white/10 dark:hover:bg-slate-800 hover:text-white transition-colors;
   }
   .sidebar-link.active {
-    @apply bg-blue-50 dark:bg-blue-950 text-blue-800 dark:text-blue-300 font-semibold;
+    @apply bg-white/15 dark:bg-slate-800 text-white font-semibold shadow-[inset_3px_0_0_theme(colors.accent)];
   }
   .page-header {
     @apply min-h-14 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center px-4 sm:px-6 py-2 gap-x-4 gap-y-2 flex-shrink-0;

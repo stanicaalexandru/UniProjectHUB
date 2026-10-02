@@ -5,6 +5,8 @@ import { Menu } from "lucide-react";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { SessionWatcher } from "@/components/layout/SessionWatcher";
 import { useT } from "@/i18n";
+import { LogoMark } from "@/components/ui/Logo";
+import { useTrackNavigation } from "@/components/ui/BackButton";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -12,6 +14,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [ready, setReady] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
+  useTrackNavigation();
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
@@ -36,7 +39,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             aria-label={t("nav.openMenu")} aria-expanded={menuOpen} aria-controls="app-sidebar">
             <Menu className="w-5 h-5" aria-hidden="true" />
           </button>
-          <div className="w-7 h-7 bg-blue-700 rounded-lg flex items-center justify-center text-white font-bold text-xs" aria-hidden="true">U</div>
+          <LogoMark size={28} />
           <span className="text-sm font-bold text-slate-800 dark:text-slate-100">{t("app.name")}</span>
         </div>
         <main className="flex-1 flex flex-col overflow-hidden">{children}</main>

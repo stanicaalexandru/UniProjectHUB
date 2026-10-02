@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Search, Bell, Plus, X } from "lucide-react";
+import { Bell, Folder, ListChecks, Plus, Search, SearchX, UserRound, X, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { apiFetch, apiFetchAll } from "@/lib/api";
@@ -14,7 +14,7 @@ interface TopbarProps {
 }
 
 type ResultType = "project" | "task" | "user";
-type SearchResult = { id: string; title: string; subtitle: string; type: ResultType; href: string; icon: string; badge?: string; badgeColor: string };
+type SearchResult = { id: string; title: string; subtitle: string; type: ResultType; href: string; icon: LucideIcon; badge?: string; badgeColor: string };
 
 const GROUPS: { type: ResultType; label: "search.groupProject" | "search.groupTask" | "search.groupUser" }[] = [
   { type: "project", label: "search.groupProject" },
@@ -72,7 +72,7 @@ export function Topbar({ title, action }: TopbarProps) {
       p.description?.toLowerCase().includes(q) ||
       p.technologies?.some(tech => tech.toLowerCase().includes(q))
     ).slice(0, 4).forEach(p => found.push({
-      id: p.id, title: p.title, type: "project", href: `/projects/${p.id}`, icon: "📁",
+      id: p.id, title: p.title, type: "project", href: `/projects/${p.id}`, icon: Folder,
       subtitle: `${t(`projectType.${p.type}`)} · ${t(`projectStatus.${p.status}`)}`,
       badge: t(`projectStatus.${p.status}`), badgeColor: "bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300",
     }));
@@ -80,7 +80,7 @@ export function Topbar({ title, action }: TopbarProps) {
     listOf<Task>(tasks).filter(task =>
       task.title?.toLowerCase().includes(q) || task.description?.toLowerCase().includes(q)
     ).slice(0, 3).forEach(task => found.push({
-      id: task.id, title: task.title, type: "task", href: "/tasks", icon: "✅",
+      id: task.id, title: task.title, type: "task", href: "/tasks", icon: ListChecks,
       subtitle: `${t("search.taskLabel")} · ${t(`priority.${task.priority}`)} · ${t(`taskStatus.${task.status}`)}`,
       badge: t(`priority.${task.priority}`), badgeColor: "bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300",
     }));
@@ -88,7 +88,7 @@ export function Topbar({ title, action }: TopbarProps) {
     listOf<User>(users).filter(u =>
       `${u.firstName} ${u.lastName}`.toLowerCase().includes(q) || u.email?.toLowerCase().includes(q)
     ).slice(0, 3).forEach(u => found.push({
-      id: u.id, title: `${u.firstName} ${u.lastName}`, type: "user", href: "/users", icon: "👤",
+      id: u.id, title: `${u.firstName} ${u.lastName}`, type: "user", href: "/users", icon: UserRound,
       subtitle: `${t(`roles.${u.role}`)} · ${u.email}`,
       badge: t(`roles.${u.role}`), badgeColor: "bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300",
     }));
@@ -156,7 +156,7 @@ export function Topbar({ title, action }: TopbarProps) {
           <div id="global-search-results" className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl z-50 overflow-hidden">
             {results.length === 0 ? (
               <div className="p-4 text-center" role="status">
-                <div className="text-2xl mb-1" aria-hidden="true">🔍</div>
+                <SearchX className="w-6 h-6 mx-auto mb-1 text-slate-400 dark:text-slate-500" aria-hidden="true" />
                 <div className="text-sm text-slate-500 dark:text-slate-400">{t("search.noResults", { query: search })}</div>
               </div>
             ) : (
@@ -178,7 +178,7 @@ export function Topbar({ title, action }: TopbarProps) {
                             <button key={`${type}-${result.id}`} id={`search-result-${index}`} role="option" aria-selected={index === highlighted}
                               onClick={() => open(result.href)} onMouseEnter={() => setHighlighted(index)}
                               className={`w-full flex items-center gap-3 px-3 py-2.5 transition-colors text-left ${index === highlighted ? "bg-slate-100 dark:bg-slate-800" : ""}`}>
-                              <span className="text-xl flex-shrink-0" aria-hidden="true">{result.icon}</span>
+                              <result.icon className="w-4 h-4 flex-shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
                               <div className="flex-1 min-w-0">
                                 <div className="text-sm font-medium dark:text-slate-200 truncate">{result.title}</div>
                                 <div className="text-xs text-slate-500 truncate dark:text-slate-400">{result.subtitle}</div>

@@ -1,6 +1,7 @@
 "use client";
+import { Meta } from "@/components/ui/Meta";
 import { useState, useEffect } from "react";
-import { Download, Plus, X } from "lucide-react";
+import { Download, FileText, Flag, Paperclip, Plus, X } from "lucide-react";
 import { apiFetch, apiFetchAll, downloadFile } from "@/lib/api";
 import { storedUser, visibleProjects } from "@/lib/projects";
 import { canDeleteDocument } from "@/lib/permissions";
@@ -105,11 +106,11 @@ export default function MilestonesPage() {
         </SelectField>
 
         {!projectId ? (
-          <EmptyState icon="🎯" title={t("milestones.selectProjectHint")} />
+          <EmptyState icon={Flag} title={t("milestones.selectProjectHint")} />
         ) : loading ? (
           <LoadingState label={t("common.loading")} />
         ) : milestones.length === 0 ? (
-          <EmptyState icon="🎯" title={isStaff ? t("milestones.noneStaff") : t("milestones.noneStudent")}
+          <EmptyState icon={Flag} title={isStaff ? t("milestones.noneStaff") : t("milestones.noneStudent")}
             action={isStaff ? <button onClick={() => setShowCreate(true)} className="btn-primary"><Plus className="w-4 h-4" aria-hidden="true" />{t("milestones.addFirst")}</button> : undefined} />
         ) : (
           <ol className="space-y-3">
@@ -126,7 +127,7 @@ export default function MilestonesPage() {
                       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-1">
                         <h2 className="font-semibold text-sm dark:text-slate-100">{m.title}</h2>
                         <Badge color={MILESTONE_STATUS_BADGE[m.status]}>{t(`milestoneStatus.${m.status}`)}</Badge>
-                        {docs.length > 0 && <span className="text-xs text-blue-700 dark:text-blue-400"><span aria-hidden="true">📎 </span>{t("milestones.docCount", { count: docs.length })}</span>}
+                        {docs.length > 0 && <Meta icon={Paperclip} className="text-xs text-blue-700 dark:text-blue-400">{t("milestones.docCount", { count: docs.length })}</Meta>}
                         <span className="text-xs text-slate-500 dark:text-slate-400 sm:ml-auto">{t("milestones.due")}: <strong className="text-slate-700 dark:text-slate-200">{format.date(m.dueDate)}</strong></span>
                       </div>
                       {m.description && <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">{m.description}</p>}
@@ -144,7 +145,7 @@ export default function MilestonesPage() {
                             const name = doc.name || doc.originalName;
                             return (
                               <li key={doc.id} className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 rounded-lg px-3 py-2">
-                                <span className="text-base" aria-hidden="true">📄</span>
+                                <FileText className="w-4 h-4 flex-shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
                                 <span className="text-xs flex-1 truncate dark:text-slate-300">{name}</span>
                                 <span className="text-xs text-slate-500 dark:text-slate-400">{format.fileSize(Number(doc.size))}</span>
                                 <button aria-label={t("documents.downloadLabel", { name })} title={t("common.download")} onClick={() => download(doc)} className="p-1 text-blue-700 hover:bg-blue-50 rounded dark:text-blue-400 dark:hover:bg-blue-950">

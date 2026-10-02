@@ -1,11 +1,12 @@
 "use client";
+import { Meta } from "@/components/ui/Meta";
 import { useState, useEffect, useCallback } from "react";
-import { ChevronLeft, ChevronRight, RefreshCw } from "lucide-react";
+import { CalendarDays, ChevronLeft, ChevronRight, Folder, RefreshCw } from "lucide-react";
 import { useT, useErrorMessage } from "@/i18n";
 import { Page, PageHeader } from "@/components/ui/Page";
 import { Alert } from "@/components/ui/Alert";
 import { LoadingState } from "@/components/ui/States";
-import { loadCalendarEvents, dayKey, parseDayKey, startOfWeek, eventColor, EVENT_ICON, EVENT_COLOR, type CalEvent, type EventKind } from "./calendarData";
+import { loadCalendarEvents, dayKey, parseDayKey, startOfWeek, eventColor, EVENT_COLOR, type CalEvent, type EventKind } from "./calendarData";
 
 const KINDS: EventKind[] = ["projectStart", "projectEnd", "milestone", "task"];
 const MONDAY = new Date(2024, 0, 1); // o zi de luni oarecare, pentru numele zilelor saptamanii
@@ -13,9 +14,8 @@ const MONDAY = new Date(2024, 0, 1); // o zi de luni oarecare, pentru numele zil
 function useEventTitle() {
   const { t } = useT();
   return (ev: CalEvent) => {
-    const text = ev.kind === "projectEnd" ? t("calendar.projectEndTitle", { title: ev.title })
+    return ev.kind === "projectEnd" ? t("calendar.projectEndTitle", { title: ev.title })
       : ev.kind === "projectStart" ? t("calendar.projectStartTitle", { title: ev.title }) : ev.title;
-    return `${EVENT_ICON[ev.kind]} ${text}`;
   };
 }
 
@@ -160,7 +160,7 @@ export default function CalendarPage() {
               <>
                 <h3 className="text-sm font-semibold dark:text-slate-100 mb-3">{parseDayKey(selected).toLocaleDateString(tag, { day: "numeric", month: "long", year: "numeric" })}</h3>
                 {selectedEvents.length === 0 ? (
-                  <p className="text-center py-6 text-xs text-slate-500 dark:text-slate-400"><span className="block text-3xl mb-2" aria-hidden="true">📅</span>{t("calendar.noEventsDay")}</p>
+                  <p className="text-center py-6 text-xs text-slate-500 dark:text-slate-400"><CalendarDays className="w-7 h-7 mx-auto mb-2 text-slate-400 dark:text-slate-500" strokeWidth={1.5} aria-hidden="true" />{t("calendar.noEventsDay")}</p>
                 ) : (
                   <ul className="space-y-2">
                     {selectedEvents.map(ev => (
@@ -169,7 +169,7 @@ export default function CalendarPage() {
                           <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${eventColor(ev)}`} aria-hidden="true" />
                           <span className="text-xs font-semibold text-slate-700 dark:text-slate-200">{eventTitle(ev)}</span>
                         </div>
-                        {ev.projectName && ev.kind !== "projectStart" && ev.kind !== "projectEnd" && <div className="text-xs text-slate-500 ml-4 dark:text-slate-400"><span aria-hidden="true">📁 </span>{ev.projectName}</div>}
+                        {ev.projectName && ev.kind !== "projectStart" && ev.kind !== "projectEnd" && <div className="text-xs text-slate-500 ml-4 dark:text-slate-400"><Meta icon={Folder}>{ev.projectName}</Meta></div>}
                         <div className="ml-4 mt-1"><span className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-white text-xs ${eventColor(ev)}`}>{t(`calendar.kind.${ev.kind}`)}</span></div>
                       </li>
                     ))}

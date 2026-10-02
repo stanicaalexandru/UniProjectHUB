@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { ArrowLeft, Video } from "lucide-react";
+import { ArrowLeft, Folder, MessagesSquare, Users, Video, type LucideIcon } from "lucide-react";
 import { apiFetch, apiFetchAll, downloadFile, startVideoCall } from "@/lib/api";
 import { projectMembers, visibleProjects } from "@/lib/projects";
 import { canAccessTeam } from "@/lib/permissions";
@@ -11,16 +11,17 @@ import { MessageItem } from "./MessageItem";
 import { MessageComposer } from "./MessageComposer";
 import type { ActiveRoom, Attachment, ChatMessage, RoomType } from "./chatTypes";
 import type { Project, Team, User } from "@/types";
+import { BackButton } from "@/components/ui/BackButton";
 
 const POLL_MS = 3000;
 const listOf = <T,>(r: PromiseSettledResult<unknown>): T[] | null =>
   r.status !== "fulfilled" ? null : Array.isArray(r.value) ? r.value : ((r.value as { data?: T[] })?.data ?? []);
 
-function RoomButton({ active, icon, label, count, onClick }: { active: boolean; icon: string; label: string; count?: number; onClick: () => void }) {
+function RoomButton({ active, icon: Icon, label, count, onClick }: { active: boolean; icon: LucideIcon; label: string; count?: number; onClick: () => void }) {
   return (
     <button onClick={onClick} aria-current={active ? "true" : undefined}
       className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors text-left mb-0.5 ${active ? "bg-blue-50 dark:bg-blue-950 text-blue-800 dark:text-blue-300 font-medium" : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"}`}>
-      <span className="text-base" aria-hidden="true">{icon}</span>
+      <Icon className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
       <span className="flex-1 truncate">{label}</span>
       {count !== undefined && <span className="text-xs text-slate-500 dark:text-slate-400">{count}</span>}
     </button>
@@ -81,11 +82,11 @@ export default function ChatPage() {
     }
   }, [messages]);
 
-  const openRoom = async (entityId: string, type: RoomType, name: string, icon: string, memberIds: string[] = []) => {
+  const openRoom = async (entityId: string, type: RoomType, name: string, memberIds: string[] = []) => {
     try {
       const created = await apiFetch("/chat/rooms", { method: "POST", body: JSON.stringify({ entityId, type, memberIds }) });
       setReplyTo(null);
-      setRoom({ id: created.id, name, icon, entityId, type });
+      setRoom({ id: created.id, name, entityId, type });
     } catch (e) { toast.error(errorMessage(e)); }
   };
 
@@ -121,9 +122,12 @@ export default function ChatPage() {
     <div className="flex-1 flex overflow-hidden bg-slate-50 dark:bg-slate-950">
       {/* Lista de conversatii; pe telefon se afiseaza fie lista, fie conversatia deschisa */}
       <nav aria-label={t("chat.roomsLabel")} className={`${room ? "hidden md:flex" : "flex"} w-full md:w-64 flex-shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex-col`}>
-        <div className="p-4 border-b border-slate-100 dark:border-slate-800">
-          <h1 className="text-sm font-bold dark:text-slate-100">{t("nav.chat")}</h1>
-          <p className="text-xs text-slate-500 mt-0.5 dark:text-slate-400">{t("chat.subtitle")}</p>
+        <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-start gap-2">
+          <BackButton />
+          <div>
+            <h1 className="text-sm font-bold dark:text-slate-100">{t("nav.chat")}</h1>
+            <p className="text-xs text-slate-500 mt-0.5 dark:text-slate-400">{t("chat.subtitle")}</p>
+          </div>
         </div>
         <div className="flex-1 overflow-y-auto p-2">
           {myTeams.length > 0 && (
@@ -131,15 +135,15 @@ export default function ChatPage() {
               <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wide px-2 mb-1 dark:text-slate-400">{t("teams.title")}</h2>
               {myTeams.map(team => {
                 const memberIds = team.members?.map(m => m.user?.id).filter((id): id is string => !!id) ?? [];
-                return <RoomButton key={team.id} active={room?.entityId === team.id} icon="👥" label={team.name} count={memberIds.length}
-                  onClick={() => openRoom(team.id, "team", team.name, "👥", memberIds)} />;
+                return <RoomButton key={team.id} active={room?.entityId === team.id} icon={Users} label={team.name} count={memberIds.length}
+                  onClick={() => openRoom(team.id, "team", team.name, memberIds)} />;
               })}
             </div>
           )}
           {projects.length > 0 && (
             <div className="mb-4">
               <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wide px-2 mb-1 dark:text-slate-400">{t("projects.title")}</h2>
-              {projects.map(p => <RoomButton key={p.id} active={room?.entityId === p.id} icon="📁" label={p.title} onClick={() => openRoom(p.id, "project", p.title, "📁")} />)}
+              {projects.map(p => <RoomButton key={p.id} active={room?.entityId === p.id} icon={Folder} label={p.title} onClick={() => openRoom(p.id, "project", p.title)} />)}
             </div>
           )}
           {!loading && myTeams.length === 0 && projects.length === 0 && (
@@ -152,7 +156,7 @@ export default function ChatPage() {
         {!room ? (
           <div className="flex-1 flex items-center justify-center p-4 text-center">
             <div>
-              <div className="text-5xl mb-4" aria-hidden="true">💬</div>
+              <MessagesSquare className="w-10 h-10 mx-auto mb-4 text-slate-400 dark:text-slate-500" strokeWidth={1.5} aria-hidden="true" />
               <div className="text-slate-700 dark:text-slate-300 font-semibold mb-2">{t("chat.pickRoom")}</div>
               <div className="text-sm text-slate-500 dark:text-slate-400">{t("chat.pickRoomHint")}</div>
             </div>
@@ -162,7 +166,7 @@ export default function ChatPage() {
             <div className="h-14 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center px-3 sm:px-4 gap-3 flex-shrink-0">
               <button onClick={() => setRoom(null)} className="md:hidden p-1 text-slate-600 dark:text-slate-400" aria-label={t("chat.backToRooms")}><ArrowLeft className="w-5 h-5" aria-hidden="true" /></button>
               <div className="flex-1 min-w-0">
-                <h2 className="text-sm font-semibold dark:text-slate-100 truncate"><span aria-hidden="true">{room.icon} </span>{room.name}</h2>
+                <h2 className="text-sm font-semibold dark:text-slate-100 truncate">{room.name}</h2>
                 <div className="text-xs text-slate-500 dark:text-slate-400">
                   {t("common.members", { count: members.length + 1 })}
                   <span className="ml-2 text-green-700 dark:text-green-400"><span aria-hidden="true">● </span>{t("chat.live")}</span>

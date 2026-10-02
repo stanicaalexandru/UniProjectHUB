@@ -1,18 +1,19 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Check, RefreshCw } from "lucide-react";
+import { AtSign, Bell, Check, CircleCheck, CircleX, ClipboardCheck, Clock, Flag, Folder, Info, ListChecks, MessageSquare, RefreshCw, Settings, TriangleAlert, Users, type LucideIcon } from "lucide-react";
 import { apiFetch } from "@/lib/api";
-import { useT, useFormat } from "@/i18n";
+import { useT } from "@/i18n";
 import { Page, PageHeader, PageBody } from "@/components/ui/Page";
 import { EmptyState, LoadingState } from "@/components/ui/States";
 import type { Notification } from "@/types";
+import { RelativeTime } from "@/components/ui/RelativeTime";
 
-const TYPE_ICONS: Record<string, string> = {
-  info: "ℹ️", success: "✅", warning: "⚠️", error: "❌",
-  deadline: "⏰", mention: "💬", evaluation: "📝",
-  team: "👥", system: "⚙️", milestone: "🎯",
-  project: "📁", task: "✅", chat: "💬",
+const TYPE_ICONS: Record<string, LucideIcon> = {
+  info: Info, success: CircleCheck, warning: TriangleAlert, error: CircleX,
+  deadline: Clock, mention: AtSign, evaluation: ClipboardCheck,
+  team: Users, system: Settings, milestone: Flag,
+  project: Folder, task: ListChecks, chat: MessageSquare,
 };
 
 const TYPE_COLORS: Record<string, string> = {
@@ -58,7 +59,6 @@ const notifyCountChanged = () => window.dispatchEvent(new Event("notifications-u
 
 export default function NotificationsPage() {
   const { t } = useT();
-  const format = useFormat();
   const router = useRouter();
   const [notifs, setNotifs] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
@@ -116,7 +116,7 @@ export default function NotificationsPage() {
 
       <PageBody>
         {loading ? <LoadingState label={t("common.loading")} /> : filtered.length === 0 ? (
-          <EmptyState icon="🔔" title={filter === "unread" ? t("notifications.noUnread") : t("notifications.none")} description={t("notifications.emptyHint")} />
+          <EmptyState icon={Bell} title={filter === "unread" ? t("notifications.noUnread") : t("notifications.none")} description={t("notifications.emptyHint")} />
         ) : (
           <ul className="space-y-2 max-w-3xl mx-auto">
             {filtered.map(n => {
@@ -125,8 +125,8 @@ export default function NotificationsPage() {
                 <li key={n.id} className={`flex items-start gap-2 rounded-xl border transition-all hover:shadow-sm ${
                   !n.isRead ? (TYPE_COLORS[n.type] || TYPE_COLORS.info) : "bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800"}`}>
                   <button onClick={() => handleClick(n)} className="flex-1 min-w-0 flex items-start gap-3 p-4 text-left rounded-xl">
-                    <span className="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 flex items-center justify-center text-xl flex-shrink-0 shadow-sm" aria-hidden="true">
-                      {TYPE_ICONS[n.type] || "🔔"}
+                    <span className="w-9 h-9 rounded-lg bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center flex-shrink-0 border border-slate-200 dark:border-slate-700" aria-hidden="true">
+                      {(() => { const Icon = TYPE_ICONS[n.type] ?? Bell; return <Icon className="w-4 h-4" />; })()}
                     </span>
                     <span className="flex-1 min-w-0">
                       <span className="flex items-center gap-2 mb-0.5">
@@ -135,7 +135,7 @@ export default function NotificationsPage() {
                       </span>
                       <span className="block text-xs text-slate-600 dark:text-slate-400">{n.message}</span>
                       <span className="flex items-center gap-2 mt-1 text-xs">
-                        <span className="text-slate-600 dark:text-slate-400">{format.dateTime(n.createdAt)}</span>
+                        <RelativeTime value={n.createdAt} className="text-slate-600 dark:text-slate-400" />
                         {dest && <span className="text-blue-700 dark:text-blue-400">· {t("notifications.clickToOpen")}</span>}
                       </span>
                     </span>

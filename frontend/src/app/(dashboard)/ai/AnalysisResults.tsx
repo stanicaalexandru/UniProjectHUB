@@ -1,15 +1,16 @@
 "use client";
+import { Check, CircleAlert, CircleCheck, Clock, FileText, Flag, Info, ListChecks, ShieldCheck, TrendingUp, TriangleAlert, UserRound, Users, type LucideIcon } from "lucide-react";
 import { useT, useFormat } from "@/i18n";
 import { CATEGORIES, scoreColor, scoreLevel, type Analysis, type RecPriority, type Risk, type RiskLevel } from "./analysis";
 
-const CATEGORY_ICONS = { progress: "📈", time: "⏰", organization: "👥", documentation: "📝", stability: "🛡️" };
+const CATEGORY_ICONS = { progress: TrendingUp, time: Clock, organization: Users, documentation: FileText, stability: ShieldCheck };
 const LEVEL_STYLE: Record<RiskLevel, string> = {
   critical: "bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800 text-red-800 dark:text-red-300",
   warning: "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-300",
   info: "bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-300",
   success: "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800 text-green-800 dark:text-green-300",
 };
-const LEVEL_ICON: Record<RiskLevel, string> = { critical: "🔴", warning: "⚠️", info: "ℹ️", success: "✅" };
+const LEVEL_ICON: Record<RiskLevel, LucideIcon> = { critical: CircleAlert, warning: TriangleAlert, info: Info, success: CircleCheck };
 const PRIORITY_BORDER: Record<RecPriority, string> = { high: "border-l-red-500", medium: "border-l-amber-500", low: "border-l-blue-500" };
 const PRIORITY_BADGE: Record<RecPriority, string> = {
   high: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
@@ -43,7 +44,7 @@ function riskText(risk: Risk, t: ReturnType<typeof useT>["t"]) {
   }
 }
 
-const REC_ICON = { accelerate: "🚀", deadlines: "⏰", assign: "👤", docs: "📝", wip: "🎯", finish: "🏁", fine: "🌟" };
+const REC_ICON = { accelerate: TrendingUp, deadlines: Clock, assign: UserRound, docs: FileText, wip: ListChecks, finish: Flag, fine: Check };
 
 export function AnalysisResults({ result, history }: { result: Analysis; history: { score: number | string; createdAt: string }[] }) {
   const { t } = useT();
@@ -60,8 +61,10 @@ export function AnalysisResults({ result, history }: { result: Analysis; history
             return (
               <li key={c} className="text-center">
                 <ScoreRing score={score} label={`${t(`ai.category.${c}`)}: ${score}`} />
-                <div className="text-lg mb-0.5" aria-hidden="true">{CATEGORY_ICONS[c]}</div>
-                <div className="text-xs font-semibold dark:text-slate-300">{t(`ai.category.${c}`)}</div>
+                <div className="flex items-center justify-center gap-1 mt-1 text-xs font-semibold dark:text-slate-300">
+                  {(() => { const Icon = CATEGORY_ICONS[c]; return <Icon className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" aria-hidden="true" />; })()}
+                  {t(`ai.category.${c}`)}
+                </div>
                 <div className="text-xs mt-0.5 font-medium" style={{ color: scoreColor(score) }}>{t(`ai.level.${scoreLevel(score)}`)}</div>
               </li>
             );
@@ -72,7 +75,7 @@ export function AnalysisResults({ result, history }: { result: Analysis; history
       {p && (
         <section className={`rounded-xl p-5 shadow-sm mb-5 border ${p.onTime ? "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800" : "bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800"}`}>
           <div className="flex items-center gap-4">
-            <div className="text-3xl" aria-hidden="true">{p.onTime ? "🟢" : "🔴"}</div>
+            {p.onTime ? <CircleCheck className="w-7 h-7 flex-shrink-0 text-green-700 dark:text-green-400" aria-hidden="true" /> : <CircleAlert className="w-7 h-7 flex-shrink-0 text-red-700 dark:text-red-400" aria-hidden="true" />}
             <div className="flex-1">
               <h2 className={`font-semibold mb-1 ${p.onTime ? "text-green-800 dark:text-green-300" : "text-red-800 dark:text-red-300"}`}>{p.onTime ? t("ai.onTime") : t("ai.lateRisk")}</h2>
               <p className={`text-sm ${p.onTime ? "text-green-800 dark:text-green-400" : "text-red-800 dark:text-red-400"}`}>
@@ -92,7 +95,7 @@ export function AnalysisResults({ result, history }: { result: Analysis; history
               const text = riskText(r, t);
               return (
                 <li key={i} className={`p-3 rounded-xl border ${LEVEL_STYLE[r.level]}`}>
-                  <div className="flex items-center gap-2 mb-1"><span aria-hidden="true">{LEVEL_ICON[r.level]}</span><span className="font-semibold text-xs">{text.title}</span></div>
+                  <div className="flex items-center gap-2 mb-1">{(() => { const Icon = LEVEL_ICON[r.level]; return <Icon className="w-4 h-4 flex-shrink-0" aria-hidden="true" />; })()}<span className="font-semibold text-xs">{text.title}</span></div>
                   <p className="text-xs mb-1">{text.desc}</p>
                   <p className="text-xs font-medium">→ {text.action}</p>
                 </li>
@@ -107,7 +110,7 @@ export function AnalysisResults({ result, history }: { result: Analysis; history
             {result.recs.map((r, i) => (
               <li key={i} className={`p-3 rounded-xl border-l-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 ${PRIORITY_BORDER[r.priority]}`}>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-base" aria-hidden="true">{REC_ICON[r.kind]}</span>
+                  {(() => { const Icon = REC_ICON[r.kind]; return <Icon className="w-4 h-4 flex-shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />; })()}
                   <span className="font-semibold text-xs dark:text-slate-200">{t(`ai.rec.${r.kind}Title`)}</span>
                   <span className={`ml-auto text-xs px-1.5 py-0.5 rounded-full ${PRIORITY_BADGE[r.priority]}`}>{t(`ai.priority.${r.priority}`)}</span>
                 </div>

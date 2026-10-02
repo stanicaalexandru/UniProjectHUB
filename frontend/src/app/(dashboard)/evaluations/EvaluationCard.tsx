@@ -34,7 +34,7 @@ export function EvaluationCard({ ev, canEdit, onEdit }: { ev: Evaluation; canEdi
 
       {hasScore && (
         <div className="mb-4 h-2 bg-slate-100 dark:bg-slate-800 rounded-full" role="progressbar" aria-valuenow={Math.round(pct(ev.totalScore, ev.maxScore))} aria-valuemin={0} aria-valuemax={100} aria-label={t("evaluations.totalScore")}>
-          <div className="h-full rounded-full" style={{ width: `${pct(ev.totalScore, ev.maxScore)}%`, background: "linear-gradient(90deg,#3b82f6,#6366f1)" }} />
+          <div className="h-full rounded-full bg-blue-600" style={{ width: `${pct(ev.totalScore, ev.maxScore)}%` }} />
         </div>
       )}
 
@@ -54,8 +54,8 @@ export function EvaluationCard({ ev, canEdit, onEdit }: { ev: Evaluation; canEdi
 
       {ev.generalFeedback && <p className="text-sm text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-800 rounded-xl p-4 mb-3">{ev.generalFeedback}</p>}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {ev.strengths && <div className="text-xs text-green-800 dark:text-green-400 bg-green-50 dark:bg-green-950/50 border border-green-100 dark:border-green-900 rounded-lg p-3">✓ <span className="font-semibold">{t("evaluations.strengths")}:</span> {ev.strengths}</div>}
-        {ev.improvements && <div className="text-xs text-amber-800 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/50 border border-amber-100 dark:border-amber-900 rounded-lg p-3">↑ <span className="font-semibold">{t("evaluations.improvements")}:</span> {ev.improvements}</div>}
+        {ev.strengths && <div className="text-xs text-green-800 dark:text-green-400 bg-green-50 dark:bg-green-950/50 border border-green-100 dark:border-green-900 rounded-lg p-3"><span className="font-semibold">{t("evaluations.strengths")}:</span> {ev.strengths}</div>}
+        {ev.improvements && <div className="text-xs text-amber-800 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/50 border border-amber-100 dark:border-amber-900 rounded-lg p-3"><span className="font-semibold">{t("evaluations.improvements")}:</span> {ev.improvements}</div>}
       </div>
 
       {!!ev.revisions?.length && (

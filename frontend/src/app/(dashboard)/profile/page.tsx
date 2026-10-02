@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Settings } from "lucide-react";
+import { ArrowLeft, Building2, CalendarDays, CheckCheck, FlaskConical, Folder, Mail, Phone, Settings, TrendingUp, UserRound, type LucideIcon } from "lucide-react";
 import { apiFetchAll } from "@/lib/api";
 import { useT } from "@/i18n";
 import { PROJECT_STATUS_BADGE, ROLE_BADGE, USER_STATUS_BADGE } from "@/lib/constants";
@@ -43,21 +43,21 @@ export default function ProfilePage() {
   if (!user) return null;
 
   const notSet = t("profile.notSet");
-  const info: [string, string, string][] = [
-    ["👤", t("profile.fullName"), `${user.firstName} ${user.lastName}`],
-    ["📧", t("profile.email"), user.email],
-    ["🏛️", t("profile.faculty"), user.faculty || notSet],
-    ["🔬", t("profile.department"), user.department || notSet],
-    ["📅", t("profile.studyYear"), user.studyYear ? t("profile.yearN", { year: user.studyYear }) : notSet],
-    ["📱", t("profile.phone"), user.phone || notSet],
+  const info: [LucideIcon, string, string][] = [
+    [UserRound, t("profile.fullName"), `${user.firstName} ${user.lastName}`],
+    [Mail, t("profile.email"), user.email],
+    [Building2, t("profile.faculty"), user.faculty || notSet],
+    [FlaskConical, t("profile.department"), user.department || notSet],
+    [CalendarDays, t("profile.studyYear"), user.studyYear ? t("profile.yearN", { year: user.studyYear }) : notSet],
+    [Phone, t("profile.phone"), user.phone || notSet],
   ];
   const averageProgress = projects.length > 0
     ? `${Math.round(projects.reduce((s, p) => s + (p.progressPercentage || 0), 0) / projects.length)}%`
     : t("common.none");
   const stats = [
-    { icon: "📁", value: projects.length, label: t("profile.statProjects") },
-    { icon: "✅", value: projects.filter(p => p.status === "completed").length, label: t("profile.statCompleted") },
-    { icon: "📈", value: averageProgress, label: t("profile.statProgress") },
+    { icon: Folder, value: projects.length, label: t("profile.statProjects") },
+    { icon: CheckCheck, value: projects.filter(p => p.status === "completed").length, label: t("profile.statCompleted") },
+    { icon: TrendingUp, value: averageProgress, label: t("profile.statProgress") },
   ];
 
   return (
@@ -91,9 +91,9 @@ export default function ProfilePage() {
           <div className="space-y-4">
             <Card title={t("profile.personalInfo")}>
               <dl className="space-y-3">
-                {info.map(([icon, label, value]) => (
+                {info.map(([Icon, label, value]) => (
                   <div key={label} className="flex items-start gap-3">
-                    <span className="text-base flex-shrink-0 mt-0.5" aria-hidden="true">{icon}</span>
+                    <Icon className="w-4 h-4 flex-shrink-0 mt-0.5 text-slate-400 dark:text-slate-500" aria-hidden="true" />
                     <div className="min-w-0">
                       <dt className="text-xs text-slate-500 dark:text-slate-400">{label}</dt>
                       <dd className="text-sm font-medium dark:text-slate-200 break-words">{value}</dd>
@@ -121,7 +121,7 @@ export default function ProfilePage() {
             <div className="grid grid-cols-3 gap-3 sm:gap-4">
               {stats.map(s => (
                 <div key={s.label} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 sm:p-4 shadow-sm text-center">
-                  <div className="text-2xl mb-1" aria-hidden="true">{s.icon}</div>
+                  <s.icon className="w-4 h-4 mx-auto mb-1.5 text-slate-400 dark:text-slate-500" aria-hidden="true" />
                   <div className="text-2xl font-bold dark:text-slate-100">{s.value}</div>
                   <div className="text-xs text-slate-500 mt-0.5 dark:text-slate-400">{s.label}</div>
                 </div>
@@ -133,13 +133,13 @@ export default function ProfilePage() {
                 {t("profile.myProjects", { count: projects.length })}
               </h3>
               {projects.length === 0 ? (
-                <div className="p-4"><EmptyState icon="📁" title={t("profile.noProjects")} /></div>
+                <div className="p-4"><EmptyState icon={Folder} title={t("profile.noProjects")} /></div>
               ) : (
                 <ul className="divide-y divide-slate-100 dark:divide-slate-800">
                   {projects.map(p => (
                     <li key={p.id}>
                       <Link href={`/projects/${p.id}`} className="flex items-center gap-3 p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                        <span className="w-9 h-9 rounded-lg bg-blue-50 dark:bg-blue-950 flex items-center justify-center text-lg flex-shrink-0" aria-hidden="true">📁</span>
+                        <span className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center flex-shrink-0" aria-hidden="true"><Folder className="w-4 h-4" /></span>
                         <span className="flex-1 min-w-0">
                           <span className="block text-sm font-medium dark:text-slate-200 truncate">{p.title}</span>
                           <span className="flex items-center gap-2 mt-0.5">

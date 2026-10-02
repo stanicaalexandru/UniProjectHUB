@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { CheckCheck, ClipboardCheck, Clock, Flag, Folder, GraduationCap, ListChecks, Presentation, ShieldCheck, Users, type LucideIcon } from "lucide-react";
 import { useT } from "@/i18n";
 import { PRIORITY_DOT, PROJECT_STATUS_BADGE, PROJECT_STATUS_HEX, TASK_STATUS_BADGE, EVALUATION_STATUS_BADGE } from "@/lib/constants";
 import { ALL_STATUSES } from "@/lib/permissions";
@@ -16,7 +17,7 @@ function Panel({ title, href, linkLabel, children, className = "" }: { title: st
   return (
     <section className={`bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden ${className}`}>
       <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-800">
-        <h2 className="text-sm font-semibold dark:text-slate-100">{title}</h2>
+        <h2 className="text-sm font-semibold text-blue-700 dark:text-slate-100">{title}</h2>
         {href && <Link href={href} className="text-xs text-blue-700 dark:text-blue-400 hover:underline">{linkLabel} →</Link>}
       </div>
       {children}
@@ -24,10 +25,10 @@ function Panel({ title, href, linkLabel, children, className = "" }: { title: st
   );
 }
 
-function Empty({ icon, text, action }: { icon?: string; text: string; action?: React.ReactNode }) {
+function Empty({ icon: Icon, text, action }: { icon?: LucideIcon; text: string; action?: React.ReactNode }) {
   return (
     <div className="text-center py-6">
-      {icon && <div className="text-3xl mb-2" aria-hidden="true">{icon}</div>}
+      {Icon && <Icon className="w-7 h-7 mx-auto mb-2 text-slate-400 dark:text-slate-500" strokeWidth={1.5} aria-hidden="true" />}
       <p className="text-slate-500 text-sm dark:text-slate-400">{text}</p>
       {action && <div className="mt-3">{action}</div>}
     </div>
@@ -45,7 +46,9 @@ function ProjectRow({ p, subtitle }: { p: Project; subtitle: string }) {
   return (
     <li>
       <Link href={`/projects/${p.id}`} className="flex items-center gap-3 p-3 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors">
-        <span className="w-9 h-9 rounded-lg bg-blue-50 dark:bg-blue-950 flex items-center justify-center text-lg flex-shrink-0" aria-hidden="true">{p.team ? "👥" : "📁"}</span>
+        <span className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center flex-shrink-0" aria-hidden="true">
+          {p.team ? <Users className="w-4 h-4" /> : <Folder className="w-4 h-4" />}
+        </span>
         <span className="flex-1 min-w-0">
           <span className="block text-sm font-medium truncate dark:text-slate-200">{p.title}</span>
           <span className="block text-xs text-slate-500 mt-0.5 dark:text-slate-400 truncate">{subtitle}</span>
@@ -69,9 +72,9 @@ export function AdminPanels({ data, loading }: { data: DashboardData | null; loa
   const distribution = ALL_STATUSES.map(status => ({ status, count: projects.filter(p => p.status === status).length })).filter(s => s.count > 0);
   const maxCount = Math.max(...distribution.map(s => s.count), 1);
   const roles = [
-    { key: "student", icon: "🎓", color: "#16a34a" },
-    { key: "professor", icon: "👨‍🏫", color: "#2563eb" },
-    { key: "admin", icon: "⚙️", color: "#9333ea" },
+    { key: "student", icon: GraduationCap, color: "#16a34a" },
+    { key: "professor", icon: Presentation, color: "#2563eb" },
+    { key: "admin", icon: ShieldCheck, color: "#9333ea" },
   ] as const;
   const professors = users.filter(u => u.role === "professor")
     .map(prof => ({ prof, count: projects.filter(p => p.coordinatorId === prof.id).length }))
@@ -109,7 +112,7 @@ export function AdminPanels({ data, loading }: { data: DashboardData | null; loa
                     const value = users.filter(u => u.role === r.key).length;
                     return (
                       <li key={r.key} className="flex items-center gap-3">
-                        <span className="text-xl flex-shrink-0" aria-hidden="true">{r.icon}</span>
+                        <r.icon className="w-4 h-4 flex-shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
                         <span className="flex-1">
                           <span className="flex justify-between text-xs mb-1"><span className="text-slate-600 dark:text-slate-400">{t(`dashboard.rolePlural.${r.key}`)}</span><span className="font-semibold dark:text-slate-300">{value}</span></span>
                           <span className="block h-2 bg-slate-100 dark:bg-slate-800 rounded-full" aria-hidden="true"><span className="block h-full rounded-full" style={{ width: `${(value / (users.length || 1)) * 100}%`, backgroundColor: r.color }} /></span>
@@ -166,7 +169,7 @@ export function ProfessorPanels({ data, loading }: { data: DashboardData | null;
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
       <Panel title={t("dashboard.coordinatedProjects")} href="/projects" linkLabel={t("dashboard.seeAll")}>
         <div className="p-2">
-          {loading ? <Loading /> : projects.length === 0 ? <Empty icon="📁" text={t("dashboard.noCoordinated")} /> : (
+          {loading ? <Loading /> : projects.length === 0 ? <Empty icon={Folder} text={t("dashboard.noCoordinated")} /> : (
             <ul>{projects.slice(0, 4).map(p => <ProjectRow key={p.id} p={p} subtitle={personName(p.createdBy) || t("common.unknownUser")} />)}</ul>
           )}
         </div>
@@ -175,11 +178,11 @@ export function ProfessorPanels({ data, loading }: { data: DashboardData | null;
       <div className="space-y-4">
         <Panel title={t("dashboard.evaluationsToComplete")} href="/evaluations" linkLabel={t("dashboard.go")}>
           <div className="p-3">
-            {loading ? <Loading /> : evals.length === 0 ? <Empty icon="✅" text={t("dashboard.allEvaluationsDone")} /> : (
+            {loading ? <Loading /> : evals.length === 0 ? <Empty icon={CheckCheck} text={t("dashboard.allEvaluationsDone")} /> : (
               <ul>
                 {evals.slice(0, 4).map(ev => (
                   <li key={ev.id} className="flex items-center gap-3 p-2 rounded-lg">
-                    <span className="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900 flex items-center justify-center text-sm flex-shrink-0" aria-hidden="true">📝</span>
+                    <span className="w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-400 flex items-center justify-center flex-shrink-0" aria-hidden="true"><ClipboardCheck className="w-4 h-4" /></span>
                     <span className="flex-1 min-w-0">
                       <span className="block text-xs font-medium dark:text-slate-200 truncate">{ev.projectTitle}</span>
                       <span className="block text-xs text-slate-500 dark:text-slate-400">{t(`evaluationPhase.${ev.phase}`)}</span>
@@ -194,13 +197,13 @@ export function ProfessorPanels({ data, loading }: { data: DashboardData | null;
 
         <Panel title={t("dashboard.deadlines7")} href="/milestones" linkLabel={t("dashboard.go")}>
           <div className="p-3">
-            {loading ? <Loading /> : deadlines.length === 0 ? <Empty icon="🎯" text={t("dashboard.noDeadlines")} /> : (
+            {loading ? <Loading /> : deadlines.length === 0 ? <Empty icon={Flag} text={t("dashboard.noDeadlines")} /> : (
               <ul>
                 {deadlines.slice(0, 4).map(m => {
                   const daysLeft = Math.ceil((new Date(m.dueDate).getTime() - now) / DAY);
                   return (
                     <li key={m.id} className="flex items-center gap-3 p-2 rounded-lg">
-                      <span className="w-8 h-8 rounded-lg bg-red-100 dark:bg-red-900 flex items-center justify-center text-sm flex-shrink-0" aria-hidden="true">⏰</span>
+                      <span className="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-950 text-red-700 dark:text-red-400 flex items-center justify-center flex-shrink-0" aria-hidden="true"><Clock className="w-4 h-4" /></span>
                       <span className="flex-1 min-w-0">
                         <span className="block text-xs font-medium dark:text-slate-200 truncate">{m.title}</span>
                         <span className="block text-xs text-slate-500 truncate dark:text-slate-400">{m.projectTitle}</span>
@@ -229,7 +232,7 @@ export function StudentPanels({ data, loading }: { data: DashboardData | null; l
       <Panel title={t("dashboard.myProjects")} href="/projects" linkLabel={t("dashboard.seeAll")}>
         <div className="p-2">
           {loading ? <Loading /> : projects.length === 0 ? (
-            <Empty icon="📁" text={t("profile.noProjects")} action={<Link href="/projects" className="btn-primary text-xs">{t("dashboard.createFirstProject")}</Link>} />
+            <Empty icon={Folder} text={t("profile.noProjects")} action={<Link href="/projects" className="btn-primary text-xs">{t("dashboard.createFirstProject")}</Link>} />
           ) : (
             <ul>{projects.slice(0, 4).map(p => <ProjectRow key={p.id} p={p} subtitle={personName(p.coordinator) || t("dashboard.noCoordinator")} />)}</ul>
           )}
@@ -239,7 +242,7 @@ export function StudentPanels({ data, loading }: { data: DashboardData | null; l
       <Panel title={t("dashboard.myTasks")} href="/tasks" linkLabel={t("dashboard.seeAll")}>
         <div className="p-4">
           {loading ? <Loading /> : tasks.length === 0 ? (
-            <Empty icon="✅" text={t("dashboard.noTasksAssigned")} action={<Link href="/tasks" className="btn-primary text-xs">{t("tasks.newTask")}</Link>} />
+            <Empty icon={ListChecks} text={t("dashboard.noTasksAssigned")} action={<Link href="/tasks" className="btn-primary text-xs">{t("tasks.newTask")}</Link>} />
           ) : (
             <ul>
               {tasks.slice(0, 4).map(task => (

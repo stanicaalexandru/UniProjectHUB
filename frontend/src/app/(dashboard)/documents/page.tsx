@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { Trash2, Download, RefreshCw } from "lucide-react";
+import { Download, FileText, FolderOpen, HardDrive, History, RefreshCw, Trash2, type LucideIcon } from "lucide-react";
 import { apiFetch, apiFetchAll, downloadFile } from "@/lib/api";
 import { storedUser, visibleProjects } from "@/lib/projects";
 import { canDeleteDocument } from "@/lib/permissions";
@@ -79,10 +79,10 @@ export default function DocumentsPage() {
   };
 
   const totalSize = docs.reduce((a, d) => a + Number(d.size || 0), 0);
-  const stats: [string, string | number, string][] = [
-    ["📁", docs.length, t("documents.statTotal")],
-    ["💾", format.fileSize(totalSize), t("documents.statStorage")],
-    ["🔄", docs.length > 0 ? `v${Math.max(...docs.map(d => d.currentVersion || 1))}` : t("common.none"), t("documents.statVersion")],
+  const stats: [LucideIcon, string | number, string][] = [
+    [FileText, docs.length, t("documents.statTotal")],
+    [HardDrive, format.fileSize(totalSize), t("documents.statStorage")],
+    [History, docs.length > 0 ? `v${Math.max(...docs.map(d => d.currentVersion || 1))}` : t("common.none"), t("documents.statVersion")],
   ];
 
   return (
@@ -105,26 +105,27 @@ export default function DocumentsPage() {
         </SelectField>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
-          {stats.map(([icon, value, label]) => (
+          {stats.map(([Icon, value, label]) => (
             <div key={label} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm">
-              <div className="text-2xl mb-2" aria-hidden="true">{icon}</div>
-              <div className="text-2xl font-bold dark:text-slate-100">{value}</div>
-              <div className="text-sm text-slate-500 dark:text-slate-400 mt-1">{label}</div>
+              <div className="flex items-center justify-between gap-2 text-sm text-slate-600 dark:text-slate-400">
+                {label}<Icon className="w-4 h-4 flex-shrink-0 text-slate-400 dark:text-slate-500" aria-hidden="true" />
+              </div>
+              <div className="text-2xl font-bold tabular-nums dark:text-slate-100 mt-2">{value}</div>
             </div>
           ))}
         </div>
 
         {!projectId ? (
-          <EmptyState icon="📂" title={t("documents.selectProjectHint")} />
+          <EmptyState icon={FolderOpen} title={t("documents.selectProjectHint")} />
         ) : loading ? (
           <LoadingState label={t("common.loading")} />
         ) : docs.length === 0 ? (
-          <EmptyState icon="📄" title={t("documents.none")} action={<UploadButton label={t("documents.uploadFirst")} busy={uploading} onFile={handleUpload} />} />
+          <EmptyState icon={FileText} title={t("documents.none")} action={<UploadButton label={t("documents.uploadFirst")} busy={uploading} onFile={handleUpload} />} />
         ) : (
           <ul className="card divide-y divide-slate-100 dark:divide-slate-800">
             {docs.map(doc => (
               <li key={doc.id} className="flex flex-wrap items-center gap-3 p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                <span className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xl flex-shrink-0" aria-hidden="true">📄</span>
+                <span className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center flex-shrink-0" aria-hidden="true"><FileText className="w-5 h-5" /></span>
                 <div className="flex-1 min-w-0">
                   <div className="text-sm font-medium truncate dark:text-slate-200">{doc.name || doc.originalName}</div>
                   <div className="text-xs text-slate-500 mt-0.5 dark:text-slate-400">

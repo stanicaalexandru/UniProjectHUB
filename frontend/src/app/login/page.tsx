@@ -1,4 +1,5 @@
 "use client";
+import { KeyRound, LockKeyhole, MailCheck, type LucideIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -122,9 +123,9 @@ export default function LoginPage() {
     });
   };
 
-  const header = (icon: string, title: string, intro: React.ReactNode) => (
+  const header = (Icon: LucideIcon, title: string, intro: React.ReactNode) => (
     <div className="text-center mb-6">
-      <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900 rounded-2xl flex items-center justify-center mx-auto mb-3"><span className="text-2xl" aria-hidden="true">{icon}</span></div>
+      <div className="w-12 h-12 bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 rounded-xl flex items-center justify-center mx-auto mb-3"><Icon className="w-6 h-6" aria-hidden="true" /></div>
       <h2 className="text-slate-800 dark:text-slate-100 text-xl font-bold">{title}</h2>
       <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">{intro}</p>
     </div>
@@ -172,7 +173,7 @@ export default function LoginPage() {
 
       {step === "pin" && (
         <>
-          {header("🔐", t("auth.pinTitle"), t("auth.pinIntro", { email }))}
+          {header(LockKeyhole, t("auth.pinTitle"), t("auth.pinIntro", { email }))}
           {error && <Alert className="mb-4">{error}</Alert>}
           <form onSubmit={handlePin} className="space-y-4">
             <TextField label={t("auth.pinLabel")} type="password" inputMode="numeric" autoComplete="one-time-code" value={pin}
@@ -187,7 +188,7 @@ export default function LoginPage() {
 
       {step === "forgot" && (
         <>
-          {header("📧", t("auth.resetTitle"), t("auth.resetIntro"))}
+          {header(KeyRound, t("auth.resetTitle"), t("auth.resetIntro"))}
           {error && <Alert className="mb-4">{error}</Alert>}
           <form onSubmit={handleForgot} className="space-y-4">
             <TextField label={t("auth.email")} type="email" autoComplete="email" value={resetEmail} onChange={e => setResetEmail(e.target.value)} placeholder={t("auth.emailPlaceholder")} required />
@@ -201,7 +202,7 @@ export default function LoginPage() {
 
       {step === "reset" && (
         <>
-          {header("✉️", t("auth.enterCodeTitle"), t("auth.codeSentTo", { email: resetEmail }))}
+          {header(MailCheck, t("auth.enterCodeTitle"), t("auth.codeSentTo", { email: resetEmail }))}
           {error && <Alert className="mb-4">{error}</Alert>}
           <form onSubmit={handleReset} className="space-y-4">
             <TextField label={t("auth.resetCode")} inputMode="numeric" autoComplete="one-time-code" value={resetCode}

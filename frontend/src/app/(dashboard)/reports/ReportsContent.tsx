@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Download } from "lucide-react";
+import { Download, FileChartColumn, Folder, UserRound } from "lucide-react";
 import { apiFetch, apiFetchAll } from "@/lib/api";
 import { isProjectMember } from "@/lib/projects";
 import { averageScore } from "@/lib/evaluations";
@@ -12,6 +12,7 @@ import { SelectField } from "@/components/ui/Field";
 import { EmptyState, LoadingState, Spinner } from "@/components/ui/States";
 import { generateProjectPdf, generateStudentPdf, type ProjectReportData, type StudentReportData } from "./reportPdf";
 import type { Evaluation, Milestone, Project, Task, User } from "@/types";
+import { LogoMark } from "@/components/ui/Logo";
 
 const listOf = <T,>(r: PromiseSettledResult<unknown>): T[] =>
   r.status !== "fulfilled" ? [] : Array.isArray(r.value) ? r.value : ((r.value as { data?: T[] })?.data ?? []);
@@ -109,8 +110,8 @@ export default function ReportsContent() {
       <PageHeader title={t("reports.title")} />
       <PageBody>
         <Tabs label={t("reports.tabsLabel")} value={tab} onChange={setTab} tabs={[
-          { value: "project", label: `📁 ${t("reports.byProject")}` },
-          { value: "student", label: `👤 ${t("reports.byStudent")}` },
+          { value: "project", label: t("reports.byProject") },
+          { value: "student", label: t("reports.byStudent") },
         ]} />
 
         {tab === "project" && (
@@ -119,11 +120,11 @@ export default function ReportsContent() {
               <option value="">{t("documents.chooseProject")}</option>
               {projects.map(p => <option key={p.id} value={p.id}>{p.title}</option>)}
             </SelectField>
-            {!projectId ? <EmptyState icon="📄" title={t("reports.pickProject")} /> : loading ? <LoadingState label={t("common.loading")} /> : projectData && (
+            {!projectId ? <EmptyState icon={FileChartColumn} title={t("reports.pickProject")} /> : loading ? <LoadingState label={t("common.loading")} /> : projectData && (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                 <section className="lg:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
-                  <div className="bg-gradient-to-r from-blue-700 to-blue-900 p-6 text-white flex items-center gap-4">
-                    <span className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-blue-700 font-bold text-xl" aria-hidden="true">U</span>
+                  <div className="bg-blue-700 p-6 text-white flex items-center gap-4">
+                    <LogoMark size={48} light />
                     <div><div className="font-bold text-lg">UniProject Hub</div><div className="text-blue-100 text-sm">{t("reports.progressReport")}</div></div>
                   </div>
                   <div className="p-6">
@@ -155,10 +156,10 @@ export default function ReportsContent() {
               <option value="">{t("teams.chooseStudent")}</option>
               {students.map(s => <option key={s.id} value={s.id}>{s.firstName} {s.lastName} — {s.email}</option>)}
             </SelectField>
-            {!studentId ? <EmptyState icon="👤" title={t("reports.pickStudent")} description={t("reports.pickStudentHint")} /> : loading ? <LoadingState label={t("common.loading")} /> : studentData && (
+            {!studentId ? <EmptyState icon={UserRound} title={t("reports.pickStudent")} description={t("reports.pickStudentHint")} /> : loading ? <LoadingState label={t("common.loading")} /> : studentData && (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                 <section className="lg:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
-                  <div className="bg-gradient-to-r from-violet-700 to-blue-700 p-6 text-white flex items-center gap-4">
+                  <div className="bg-blue-700 p-6 text-white flex items-center gap-4">
                     <span className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-2xl font-bold" aria-hidden="true">{studentData.student.firstName?.[0]}{studentData.student.lastName?.[0]}</span>
                     <div className="min-w-0">
                       <h2 className="font-bold text-xl">{studentData.student.firstName} {studentData.student.lastName}</h2>
@@ -179,7 +180,7 @@ export default function ReportsContent() {
                       <ul className="space-y-2 mb-5">
                         {studentData.projects.slice(0, 5).map(p => (
                           <li key={p.id} className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
-                            <span className="text-base" aria-hidden="true">📁</span>
+                            <Folder className="w-4 h-4 flex-shrink-0 text-slate-500 dark:text-slate-400" aria-hidden="true" />
                             <span className="flex-1 min-w-0">
                               <span className="block text-sm font-medium dark:text-slate-200 truncate">{p.title}</span>
                               <span className="block text-xs text-slate-500 dark:text-slate-400">{t("reports.projectLine", { progress: p.progressPercentage || 0, count: p.evaluations.filter(e => e.status === "completed").length })}</span>
@@ -201,8 +202,8 @@ export default function ReportsContent() {
                   ]} />
                   <section className="bg-violet-50 dark:bg-violet-950/50 border border-violet-100 dark:border-violet-900 rounded-xl p-4">
                     <h3 className="text-sm font-semibold text-violet-800 dark:text-violet-300 mb-2">{t("reports.contents")}</h3>
-                    <ul className="space-y-1.5 text-xs text-violet-800 dark:text-violet-400">
-                      {(["content1", "content2", "content3", "content4", "content5"] as const).map(k => <li key={k}>✓ {t(`reports.${k}`)}</li>)}
+                    <ul className="space-y-1.5 text-xs text-violet-800 dark:text-violet-400 list-disc pl-4">
+                      {(["content1", "content2", "content3", "content4", "content5"] as const).map(k => <li key={k}>{t(`reports.${k}`)}</li>)}
                     </ul>
                   </section>
                 </div>

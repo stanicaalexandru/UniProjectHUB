@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Check, CornerUpLeft, Download, FileText, Pencil, Reply, SmilePlus, Trash2, X } from "lucide-react";
+import { Check, CornerUpLeft, Download, FileText, ImageIcon, Pencil, Reply, SmilePlus, Trash2, X } from "lucide-react";
 import { useT, useFormat, useUserName } from "@/i18n";
 import { Avatar } from "@/components/ui/Avatar";
 import { splitMentions, type Attachment, type ChatMessage } from "./chatTypes";
@@ -80,7 +80,7 @@ export function MessageItem({ msg, isMe, currentUserId, memberNames, onReply, on
                 <button key={i} onClick={() => onDownload(att)} aria-label={t("documents.downloadLabel", { name: att.originalName })}
                   className={`flex items-center gap-2.5 px-3 py-2 rounded-xl border text-left transition-colors max-w-64 ${isMe ? "bg-blue-700 border-blue-600 hover:bg-blue-800 text-white" : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-blue-400 text-slate-700 dark:text-slate-200"}`}>
                   <span className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${isMe ? "bg-blue-500/50" : "bg-slate-100 dark:bg-slate-700"}`} aria-hidden="true">
-                    {att.mimeType?.startsWith("image/") ? <span className="text-base">🖼️</span> : <FileText className="w-4 h-4" />}
+                    {att.mimeType?.startsWith("image/") ? <ImageIcon className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="block text-xs font-medium truncate">{att.originalName}</span>

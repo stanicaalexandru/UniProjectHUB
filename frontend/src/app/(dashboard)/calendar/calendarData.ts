@@ -5,7 +5,6 @@ import type { Milestone, Project, Task } from "@/types";
 export type EventKind = "projectStart" | "projectEnd" | "milestone" | "task";
 export type CalEvent = { id: string; title: string; date: string; kind: EventKind; done: boolean; projectName?: string };
 
-export const EVENT_ICON: Record<EventKind, string> = { projectStart: "🚀", projectEnd: "🏁", milestone: "🎯", task: "✅" };
 export const EVENT_COLOR: Record<EventKind, string> = { projectStart: "bg-emerald-700", projectEnd: "bg-green-700", milestone: "bg-blue-600", task: "bg-amber-700" };
 export const DONE_COLOR = "bg-teal-700";
 export const eventColor = (e: CalEvent) => (e.done ? DONE_COLOR : EVENT_COLOR[e.kind]);

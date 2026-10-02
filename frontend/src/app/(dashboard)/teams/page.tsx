@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
-import { Plus, RefreshCw } from "lucide-react";
+import { Plus, RefreshCw, Users } from "lucide-react";
 import { apiFetch, apiFetchAll } from "@/lib/api";
 import { useConfirm } from "@/components/ui/Feedback";
 import { useRole } from "@/hooks/useRole";
@@ -94,7 +94,7 @@ export default function TeamsPage() {
         {role && !isStaff && <Alert kind="info" className="mb-4">{t("teams.studentHint")}</Alert>}
 
         {loading ? <LoadingState label={t("common.loading")} /> : teams.length === 0 ? (
-          <EmptyState icon="👥" title={isStaff ? t("teams.noneStaff") : t("teams.noneStudent")}
+          <EmptyState icon={Users} title={isStaff ? t("teams.noneStaff") : t("teams.noneStudent")}
             action={isStaff ? <button onClick={() => setDialog({ kind: "create" })} className="btn-primary"><Plus className="w-4 h-4" aria-hidden="true" />{t("teams.createFirst")}</button> : undefined} />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

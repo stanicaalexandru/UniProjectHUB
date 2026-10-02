@@ -49,7 +49,7 @@ export function CreateEvaluationModal({ projectId, onClose, onCreated }: { proje
         </SelectField>
         <div className="bg-blue-50 dark:bg-blue-950/50 border border-blue-100 dark:border-blue-900 rounded-xl p-4">
           <p className="text-xs font-semibold text-blue-800 dark:text-blue-400 mb-2">{t("evaluations.rubricIncluded")}</p>
-          <ul>{RUBRIC.map(c => <li key={c.key} className="text-xs text-blue-800 dark:text-blue-400">✓ {t(`evaluations.rubric.${c.key}`)} ({c.maxScore}p)</li>)}</ul>
+          <ul className="list-disc pl-4">{RUBRIC.map(c => <li key={c.key} className="text-xs text-blue-800 dark:text-blue-400">{t(`evaluations.rubric.${c.key}`)} ({c.maxScore}p)</li>)}</ul>
         </div>
         <div className="flex justify-end gap-3 pt-2">
           <button type="button" onClick={onClose} className="btn-secondary">{t("common.cancel")}</button>
@@ -100,7 +100,7 @@ export function CompleteEvaluationModal({ ev, onClose, onSaved }: { ev: Evaluati
       title={`${isCorrection ? t("evaluations.correctTitle") : t("evaluations.completeTitle")} — ${t(`evaluationPhase.${ev.phase}`)}`}
       subtitle={isCorrection ? t("evaluations.correctHint") : t("evaluations.completeHint")}>
       <form onSubmit={submit} className="space-y-4">
-        <div className="bg-gradient-to-r from-blue-700 to-violet-700 rounded-xl p-4 text-white flex items-center gap-4" aria-live="polite">
+        <div className="bg-blue-700 rounded-xl p-4 text-white flex items-center gap-4" aria-live="polite">
           <div className="flex-1">
             <div className="text-sm font-semibold mb-1">{t("evaluations.currentTotal")}</div>
             <div className="h-2 bg-white/30 rounded-full"><div className="h-full bg-white rounded-full transition-all" style={{ width: `${percentage}%` }} /></div>

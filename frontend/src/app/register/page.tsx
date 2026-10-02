@@ -1,4 +1,5 @@
 "use client";
+import { Hourglass, MailCheck } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -112,7 +113,7 @@ export default function RegisterPage() {
 
       {step === "pending" && (
         <div className="text-center" role="status">
-          <div className="text-4xl mb-3" aria-hidden="true">⏳</div>
+          <Hourglass className="w-9 h-9 mx-auto mb-3 text-amber-600 dark:text-amber-400" strokeWidth={1.5} aria-hidden="true" />
           <h2 className="text-slate-800 dark:text-slate-100 text-xl font-bold mb-2">{t("auth.pendingTitle")}</h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-6">{t("auth.pendingText")}</p>
           <Link href="/login" className="btn-primary w-full justify-center py-2.5">{t("auth.goToLogin")}</Link>
@@ -157,7 +158,7 @@ export default function RegisterPage() {
       {step === "verify" && (
         <>
           <div className="text-center mb-6">
-            <div className="text-4xl mb-3" aria-hidden="true">📧</div>
+            <MailCheck className="w-9 h-9 mx-auto mb-3 text-blue-700 dark:text-blue-400" strokeWidth={1.5} aria-hidden="true" />
             <h2 className="text-slate-800 dark:text-slate-100 text-xl font-bold mb-2">{t("auth.verifyTitle")}</h2>
             <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
               {t("auth.verifyIntro")}<br />

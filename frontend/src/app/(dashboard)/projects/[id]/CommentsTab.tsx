@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { Send } from "lucide-react";
+import { MessageSquare, Send } from "lucide-react";
 import { apiFetch } from "@/lib/api";
-import { useT, useFormat, useUserName } from "@/i18n";
+import { useT, useUserName } from "@/i18n";
 import { Avatar } from "@/components/ui/Avatar";
 import type { User } from "@/types";
+import { RelativeTime } from "@/components/ui/RelativeTime";
 
 export type Comment = { id: string; content: string; authorId?: string; author?: User | null; createdAt: string };
 
@@ -13,7 +14,6 @@ export function CommentsTab({ projectId, user, comments, onAdded, onError }: {
   projectId: string; user: User | null; comments: Comment[]; onAdded: (c: Comment) => void; onError: (e: unknown) => void;
 }) {
   const { t } = useT();
-  const format = useFormat();
   const displayName = useUserName();
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
@@ -36,7 +36,7 @@ export function CommentsTab({ projectId, user, comments, onAdded, onError }: {
     <div className="card">
       <div ref={listRef} className="p-4 space-y-4 max-h-96 overflow-y-auto" aria-live="polite">
         {comments.length === 0 ? (
-          <p className="text-center py-10 text-slate-500 text-sm dark:text-slate-400"><span className="block text-4xl mb-3" aria-hidden="true">💬</span>{t("projectDetail.noComments")}</p>
+          <p className="text-center py-10 text-slate-500 text-sm dark:text-slate-400"><MessageSquare className="w-8 h-8 mx-auto mb-3 text-slate-400 dark:text-slate-500" strokeWidth={1.5} aria-hidden="true" />{t("projectDetail.noComments")}</p>
         ) : comments.map(c => {
           const isMe = c.author?.id === user?.id || c.authorId === user?.id;
           return (
@@ -48,7 +48,7 @@ export function CommentsTab({ projectId, user, comments, onAdded, onError }: {
                   {c.author?.role && <span className="text-xs text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded dark:text-slate-400">{t(`roles.${c.author.role}`)}</span>}
                 </div>
                 <div className={`px-3 py-2 rounded-2xl text-sm leading-relaxed break-words ${isMe ? "bg-blue-700 text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200"}`}>{c.content}</div>
-                <span className="text-xs text-slate-500 mt-1 dark:text-slate-400">{format.dateTime(c.createdAt)}</span>
+                <RelativeTime value={c.createdAt} className="text-xs text-slate-500 mt-1 dark:text-slate-400" />
               </div>
             </div>
           );

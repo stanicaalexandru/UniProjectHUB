@@ -1,3 +1,4 @@
+import { Factory, FlaskConical, Globe, GraduationCap, Smartphone, Zap, type LucideIcon } from "lucide-react";
 import type { Locale } from "@/i18n";
 import type { ProjectType } from "@/types";
 
@@ -5,7 +6,7 @@ import type { ProjectType } from "@/types";
 // Textele se salveaza in proiect in limba aleasa de utilizator in momentul crearii.
 type Text = Record<Locale, string>;
 export type ProjectTemplate = {
-  id: string; icon: string; color: string; type: ProjectType;
+  id: string; icon: LucideIcon; type: ProjectType;
   name: Text; description: Text;
   milestones: { title: Text; description: Text; days: number }[];
   technologies: string[]; tags: string[];
@@ -16,7 +17,7 @@ const m = (roTitle: string, enTitle: string, roDesc: string, enDesc: string, day
 
 export const PROJECT_TEMPLATES: ProjectTemplate[] = [
   {
-    id: "licenta-info", icon: "🎓", color: "from-blue-600 to-blue-800", type: "bachelor_thesis",
+    id: "licenta-info", icon: GraduationCap, type: "bachelor_thesis",
     name: { ro: "Licență Informatică", en: "Computer Science thesis" },
     description: { ro: "Șablon complet pentru o lucrare de licență", en: "Complete template for a bachelor thesis" },
     milestones: [
@@ -30,7 +31,7 @@ export const PROJECT_TEMPLATES: ProjectTemplate[] = [
     technologies: ["React", "Node.js", "PostgreSQL", "TypeScript"], tags: ["licenta", "informatica"],
   },
   {
-    id: "licenta-electronica", icon: "⚡", color: "from-amber-500 to-orange-600", type: "bachelor_thesis",
+    id: "licenta-electronica", icon: Zap, type: "bachelor_thesis",
     name: { ro: "Licență Electronică", en: "Electronics thesis" },
     description: { ro: "Șablon pentru proiecte hardware/software", en: "Template for hardware/software projects" },
     milestones: [
@@ -44,7 +45,7 @@ export const PROJECT_TEMPLATES: ProjectTemplate[] = [
     technologies: ["Arduino", "C/C++", "Python"], tags: ["licenta", "electronica"],
   },
   {
-    id: "cercetare", icon: "🔬", color: "from-purple-600 to-violet-700", type: "research",
+    id: "cercetare", icon: FlaskConical, type: "research",
     name: { ro: "Proiect de cercetare", en: "Research project" },
     description: { ro: "Șablon pentru cercetare academică", en: "Template for academic research" },
     milestones: [
@@ -58,7 +59,7 @@ export const PROJECT_TEMPLATES: ProjectTemplate[] = [
     technologies: ["Python", "TensorFlow", "LaTeX"], tags: ["cercetare", "academic"],
   },
   {
-    id: "aplicatie-mobila", icon: "📱", color: "from-green-500 to-emerald-600", type: "bachelor_thesis",
+    id: "aplicatie-mobila", icon: Smartphone, type: "bachelor_thesis",
     name: { ro: "Aplicație mobilă", en: "Mobile app" },
     description: { ro: "Șablon pentru o aplicație mobilă", en: "Template for a mobile application" },
     milestones: [
@@ -72,7 +73,7 @@ export const PROJECT_TEMPLATES: ProjectTemplate[] = [
     technologies: ["React Native", "Firebase", "TypeScript"], tags: ["mobile", "android", "ios"],
   },
   {
-    id: "open-source", icon: "🌐", color: "from-teal-500 to-cyan-600", type: "open_source",
+    id: "open-source", icon: Globe, type: "open_source",
     name: { ro: "Proiect open source", en: "Open source project" },
     description: { ro: "Șablon pentru un proiect open source", en: "Template for an open source project" },
     milestones: [
@@ -86,7 +87,7 @@ export const PROJECT_TEMPLATES: ProjectTemplate[] = [
     technologies: ["TypeScript", "Jest", "GitHub Actions"], tags: ["open-source"],
   },
   {
-    id: "industrial", icon: "🏭", color: "from-slate-600 to-slate-800", type: "industrial",
+    id: "industrial", icon: Factory, type: "industrial",
     name: { ro: "Proiect industrial", en: "Industry project" },
     description: { ro: "Șablon pentru proiecte cu industria", en: "Template for projects with industry partners" },
     milestones: [

@@ -1,5 +1,6 @@
 "use client";
-import { Download } from "lucide-react";
+import { Meta } from "@/components/ui/Meta";
+import { CalendarDays, ClipboardCheck, Download, FileText, Flag, History, ListChecks, UserRound } from "lucide-react";
 import { downloadFile } from "@/lib/api";
 import { useT, useFormat, useUserName } from "@/i18n";
 import { MILESTONE_STATUS_BADGE, MILESTONE_STATUS_DOT, PRIORITY_DOT, PROJECT_STATUS_BADGE, TASK_STATUS_BADGE } from "@/lib/constants";
@@ -8,6 +9,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Avatar } from "@/components/ui/Avatar";
 import { EmptyState } from "@/components/ui/States";
 import type { Document, Evaluation, Milestone, Project, Task, User } from "@/types";
+import { RelativeTime } from "@/components/ui/RelativeTime";
 
 export type Activity = { id: string; action: string; description?: string; user?: User | null; createdAt: string };
 
@@ -48,7 +50,7 @@ export function OverviewTab({ project }: { project: Project }) {
 export function MilestonesTab({ milestones }: { milestones: Milestone[] }) {
   const { t } = useT();
   const format = useFormat();
-  if (milestones.length === 0) return <EmptyState icon="🎯" title={t("projectDetail.noMilestones")} />;
+  if (milestones.length === 0) return <EmptyState icon={Flag} title={t("projectDetail.noMilestones")} />;
   return (
     <ol className="space-y-3">
       {milestones.map((m, i) => (
@@ -74,7 +76,7 @@ export function MilestonesTab({ milestones }: { milestones: Milestone[] }) {
 export function TasksTab({ tasks }: { tasks: Task[] }) {
   const { t } = useT();
   const format = useFormat();
-  if (tasks.length === 0) return <EmptyState icon="✅" title={t("tasks.noTasks")} />;
+  if (tasks.length === 0) return <EmptyState icon={ListChecks} title={t("tasks.noTasks")} />;
   return (
     <ul className="space-y-2">
       {tasks.map(task => (
@@ -82,11 +84,11 @@ export function TasksTab({ tasks }: { tasks: Task[] }) {
           <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${PRIORITY_DOT[task.priority] ?? "bg-slate-300"}`} role="img" aria-label={t(`priority.${task.priority}`)} />
           <div className="flex-1 min-w-0">
             <div className="text-sm font-medium dark:text-slate-200">{task.title}</div>
-            {task.assignee && <div className="text-xs text-slate-500 mt-0.5 dark:text-slate-400"><span aria-hidden="true">👤 </span>{task.assignee.firstName} {task.assignee.lastName}</div>}
+            {task.assignee && <div className="text-xs text-slate-500 mt-0.5 dark:text-slate-400"><Meta icon={UserRound}>{task.assignee.firstName} {task.assignee.lastName}</Meta></div>}
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
             <Badge color={TASK_STATUS_BADGE[task.status]}>{t(`taskStatus.${task.status}`)}</Badge>
-            {task.dueDate && <span className="text-xs text-slate-500 dark:text-slate-400"><span aria-hidden="true">📅 </span>{format.date(task.dueDate)}</span>}
+            {task.dueDate && <Meta icon={CalendarDays} className="text-xs text-slate-500 dark:text-slate-400">{format.date(task.dueDate)}</Meta>}
           </div>
         </li>
       ))}
@@ -98,14 +100,14 @@ export function DocumentsTab({ documents, onError }: { documents: Document[]; on
   const { t } = useT();
   const format = useFormat();
   const displayName = useUserName();
-  if (documents.length === 0) return <EmptyState icon="📄" title={t("documents.none")} />;
+  if (documents.length === 0) return <EmptyState icon={FileText} title={t("documents.none")} />;
   return (
     <ul className="space-y-2">
       {documents.map(doc => {
         const name = doc.name || doc.originalName;
         return (
           <li key={doc.id} className={`${card} flex items-center gap-3`}>
-            <span className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xl flex-shrink-0" aria-hidden="true">📄</span>
+            <span className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center flex-shrink-0" aria-hidden="true"><FileText className="w-5 h-5" /></span>
             <div className="flex-1 min-w-0">
               <div className="text-sm font-medium dark:text-slate-200 truncate">{name}</div>
               <div className="text-xs text-slate-500 mt-0.5 dark:text-slate-400">{displayName(doc.uploadedBy)} · {format.date(doc.createdAt)}</div>
@@ -125,12 +127,12 @@ export function EvaluationsTab({ evaluations }: { evaluations: Evaluation[] }) {
   const { t } = useT();
   const format = useFormat();
   const displayName = useUserName();
-  if (evaluations.length === 0) return <EmptyState icon="📝" title={t("evaluations.none")} />;
+  if (evaluations.length === 0) return <EmptyState icon={ClipboardCheck} title={t("evaluations.none")} />;
   const avg = averageScore(evaluations);
   return (
     <div className="space-y-4">
       {avg && (
-        <div className="bg-gradient-to-r from-blue-700 to-violet-700 rounded-xl p-5 text-white flex flex-wrap items-center gap-4">
+        <div className="bg-blue-700 rounded-xl p-5 text-white flex flex-wrap items-center gap-4">
           <div className="flex-1">
             <div className="font-bold text-lg mb-1">{t("projectDetail.averageScore")}</div>
             <div className="text-blue-100 text-sm">{t("projectDetail.completedEvaluations", { count: evaluations.filter(e => e.status === "completed").length })}</div>
@@ -156,9 +158,8 @@ export function EvaluationsTab({ evaluations }: { evaluations: Evaluation[] }) {
 
 export function ActivityTab({ activities }: { activities: Activity[] }) {
   const { t, tr } = useT();
-  const format = useFormat();
   const displayName = useUserName();
-  if (activities.length === 0) return <EmptyState icon="📋" title={t("projectDetail.noActivity")} />;
+  if (activities.length === 0) return <EmptyState icon={History} title={t("projectDetail.noActivity")} />;
   return (
     <ul className="card divide-y divide-slate-100 dark:divide-slate-800">
       {activities.map(a => (
@@ -174,7 +175,7 @@ export function ActivityTab({ activities }: { activities: Activity[] }) {
             </div>
             {a.description && <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{a.description}</p>}
           </div>
-          <span className="text-xs text-slate-500 flex-shrink-0 whitespace-nowrap dark:text-slate-400">{format.dateTime(a.createdAt)}</span>
+          <RelativeTime value={a.createdAt} className="text-xs text-slate-500 flex-shrink-0 whitespace-nowrap dark:text-slate-400" />
         </li>
       ))}
     </ul>

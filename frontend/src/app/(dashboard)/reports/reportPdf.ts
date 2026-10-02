@@ -1,5 +1,6 @@
 import { averageScore } from "@/lib/evaluations";
 import type { Evaluation, Milestone, Project, Task, User } from "@/types";
+import { LOGO_BARS } from "@/components/ui/Logo";
 
 // Generarea rapoartelor PDF (jsPDF, incarcat doar la nevoie).
 // Fonturile standard din PDF nu au diacriticele romanesti, asa ca textul e transliterat (ș -> s, ă -> a).
@@ -9,7 +10,7 @@ type RGB = [number, number, number];
 export type ProjectReportData = { project: Project; milestones: Milestone[]; tasks: Task[]; evaluations: Evaluation[] };
 export type StudentReportData = { student: User; projects: (Project & { milestones: Milestone[]; tasks: Task[]; evaluations: Evaluation[] })[] };
 
-const BLUE: RGB = [30, 64, 175];
+const BLUE: RGB = [30, 58, 95];
 const VIOLET: RGB = [139, 92, 246];
 const GREEN: RGB = [16, 185, 129];
 export const pdfText = (s: unknown) => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "");
@@ -29,10 +30,11 @@ function cover({ doc, pageW, pageH }: Ctx, subtitle: string, t: T) {
   doc.rect(0, 0, pageW, 60, "F");
   doc.setFillColor(255, 255, 255);
   doc.roundedRect(15, 12, 36, 36, 4, 4, "F");
-  doc.setTextColor(...BLUE);
-  doc.setFontSize(22);
+  // Semnul aplicatiei (vezi components/ui/Logo): pe 36 mm, deci 36/32 mm pe unitate
+  const unit = 36 / 32;
+  doc.setFillColor(...BLUE);
+  for (const b of LOGO_BARS) doc.roundedRect(15 + b.x * unit, 12 + b.y * unit, b.w * unit, 4 * unit, 2 * unit, 2 * unit, "F");
   doc.setFont("helvetica", "bold");
-  doc.text("U", 33, 34);
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(20);
   doc.text("UniProject Hub", 60, 28);

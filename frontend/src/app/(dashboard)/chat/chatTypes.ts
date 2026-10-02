@@ -14,7 +14,7 @@ export type ChatMessage = {
   createdAt: string;
 };
 export type RoomType = "team" | "project";
-export type ActiveRoom = { id: string; name: string; icon: string; entityId: string; type: RoomType };
+export type ActiveRoom = { id: string; name: string; entityId: string; type: RoomType };
 
 // Textul de dupa ultimul "@" (litere, inclusiv cu diacritice), pentru lista de mentiuni
 export const MENTION_TRIGGER = /@([\p{L}\p{N}_]*)$/u;

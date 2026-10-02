@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
-import { Plus, RefreshCw, Star } from "lucide-react";
+import { Folder, Plus, RefreshCw, Star } from "lucide-react";
 import { apiFetch, apiFetchAll } from "@/lib/api";
 import { isProjectMember } from "@/lib/projects";
 import { ALL_STATUSES } from "@/lib/permissions";
@@ -117,13 +117,15 @@ export default function ProjectsPage() {
 
         {loading ? <LoadingState label={t("common.loading")} /> : visible.length === 0 ? (
           scope === "favorites"
-            ? <EmptyState icon="⭐" title={t("projects.noFavorites")} description={t("projects.noFavoritesHint")} />
-            : <EmptyState icon="📁" title={t("projects.none")} action={<button onClick={() => setShowCreate(true)} className="btn-primary"><Plus className="w-4 h-4" aria-hidden="true" />{t("projects.newProject")}</button>} />
+            ? <EmptyState icon={Star} title={t("projects.noFavorites")} description={t("projects.noFavoritesHint")} />
+            : <EmptyState icon={Folder} title={t("projects.none")} action={<button onClick={() => setShowCreate(true)} className="btn-primary"><Plus className="w-4 h-4" aria-hidden="true" />{t("projects.newProject")}</button>} />
         ) : (
-          visible.map(p => (
-            <ProjectCard key={p.id} project={p} user={user} isFavorite={favorites.includes(p.id)}
-              onToggleFavorite={() => toggleFavorite(p.id)} onStatusChange={s => handleStatusChange(p.id, s)} onDelete={() => handleDelete(p)} />
-          ))
+          <ul className="card divide-y divide-slate-100 dark:divide-slate-800 overflow-hidden">
+            {visible.map(p => (
+              <ProjectCard key={p.id} project={p} user={user} isFavorite={favorites.includes(p.id)}
+                onToggleFavorite={() => toggleFavorite(p.id)} onStatusChange={s => handleStatusChange(p.id, s)} onDelete={() => handleDelete(p)} />
+            ))}
+          </ul>
         )}
       </PageBody>
 

@@ -1,7 +1,8 @@
 "use client";
-import { Check, Plus, X } from "lucide-react";
+import { Meta } from "@/components/ui/Meta";
+import { Check, Hourglass, Plus, Users, X } from "lucide-react";
 import { useT } from "@/i18n";
-import { Avatar } from "@/components/ui/Avatar";
+import { Avatar, AvatarStack } from "@/components/ui/Avatar";
 import type { JoinRequest, Team, TeamMember } from "@/types";
 
 const fullName = (u?: { firstName?: string; lastName?: string }) => `${u?.firstName ?? ""} ${u?.lastName ?? ""}`.trim();
@@ -26,7 +27,9 @@ export function TeamCard({ team, isStaff, canManage, isMember, hasPendingRequest
   return (
     <article className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm">
       <div className="flex items-start gap-3 mb-4">
-        <span className="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950 flex items-center justify-center text-xl flex-shrink-0" aria-hidden="true">👥</span>
+        {memberCount > 0
+          ? <AvatarStack people={team.members.map(m => m.user)} label={t("common.membersLabel")} />
+          : <span className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center flex-shrink-0" aria-hidden="true"><Users className="w-5 h-5" /></span>}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <h2 className="font-semibold dark:text-slate-100">{team.name}</h2>
@@ -88,9 +91,9 @@ export function TeamCard({ team, isStaff, canManage, isMember, hasPendingRequest
       {!isStaff && (
         <div className="mt-2 text-xs text-center">
           {isMember ? (
-            <p className="text-green-700 dark:text-green-400 py-1">✓ {t("teams.youAreMember")}</p>
+            <p className="text-green-700 dark:text-green-400 py-1"><Meta icon={Check}>{t("teams.youAreMember")}</Meta></p>
           ) : hasPendingRequest ? (
-            <p className="text-amber-800 dark:text-amber-400 py-1 bg-amber-50 dark:bg-amber-950/50 rounded-lg">⏳ {t("teams.requestPending")}</p>
+            <p className="text-amber-800 dark:text-amber-400 py-1 bg-amber-50 dark:bg-amber-950/50 rounded-lg"><Meta icon={Hourglass}>{t("teams.requestPending")}</Meta></p>
           ) : !isFull ? (
             <button onClick={onRequestJoin} className="btn-secondary w-full justify-center text-xs"><Plus className="w-3.5 h-3.5" aria-hidden="true" />{t("teams.requestJoin")}</button>
           ) : (

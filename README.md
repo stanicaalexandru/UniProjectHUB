@@ -14,6 +14,8 @@ The interface is available in **Romanian and English** (switchable at any time).
 
 ## Screenshots
 
+![A short tour: sign-in, dashboard, projects, a project page, Kanban board, chat, evaluations and Gantt chart](docs/screenshots/tour.gif)
+
 | Dashboard | Project page |
 |---|---|
 | ![Dashboard](docs/screenshots/dashboard.jpg) | ![Project page](docs/screenshots/project.jpg) |
@@ -113,7 +115,7 @@ The live demo runs on free tiers: **Vercel** (frontend), **Render** (API, `rende
 | Lint | `npm run lint` | `npm run lint` |
 | Types | `npm run typecheck` | `npx tsc --noEmit` |
 | Build | `npm run build` | `npm run build` |
-| Tests | `npm test` — authorization matrix against the running API | — |
+| Tests | `npm test` — authorization matrix against the running API | `npm test` — permission rules and project analysis (Vitest) |
 
 The same checks run on every push in GitHub Actions (`.github/workflows/ci.yml`), with a fresh
 PostgreSQL database.

@@ -1,6 +1,7 @@
 "use client";
+import { Meta } from "@/components/ui/Meta";
 import { useState, useEffect, useCallback } from "react";
-import { Plus, RefreshCw, X } from "lucide-react";
+import { CalendarDays, Folder, Plus, RefreshCw, X } from "lucide-react";
 import { apiFetch, apiFetchAll } from "@/lib/api";
 import { storedUser, visibleProjects } from "@/lib/projects";
 import { PRIORITY_DOT } from "@/lib/constants";
@@ -34,12 +35,12 @@ function TaskCard({ task, onMove, onDelete }: { task: Task; onMove: (status: Tas
         </button>
       </div>
       {task.description && <p className="text-xs text-slate-500 mb-2 line-clamp-2 dark:text-slate-400">{task.description}</p>}
-      {task.project && <div className="text-xs text-blue-700 dark:text-blue-400 mb-1.5 truncate"><span aria-hidden="true">📁 </span>{task.project.title}</div>}
+      {task.project && <div className="text-xs text-blue-700 dark:text-blue-400 mb-1.5 truncate"><Meta icon={Folder}>{task.project.title}</Meta></div>}
       <div className="flex items-center justify-between gap-2 text-xs text-slate-500 mb-2 dark:text-slate-400">
         {task.assignee ? (
           <span className="flex items-center gap-1 min-w-0"><Avatar user={task.assignee} size="xs" /><span className="truncate">{task.assignee.firstName}</span></span>
         ) : <span>{t("tasks.unassigned")}</span>}
-        {task.dueDate && <span className="flex-shrink-0"><span aria-hidden="true">📅 </span>{format.date(task.dueDate)}</span>}
+        {task.dueDate && <Meta icon={CalendarDays} className="flex-shrink-0">{format.date(task.dueDate)}</Meta>}
       </div>
       <select value={task.status} onChange={e => onMove(e.target.value as TaskStatus)} aria-label={t("tasks.statusLabel", { title: task.title })}
         className="w-full text-xs px-2 py-1 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800 dark:text-slate-300">

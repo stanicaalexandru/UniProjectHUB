@@ -4,7 +4,6 @@ export type GanttStatus = "completed" | "in_progress" | "pending" | "overdue";
 export type GanttItem = {
   id: string;
   title: string;
-  icon: string;
   start: Date;
   end: Date;
   status: string;
@@ -22,7 +21,7 @@ export function buildGanttItems(project: Project | undefined, milestones: Milest
   if (project?.endDate) {
     const end = new Date(project.endDate);
     items.push({
-      id: `proj-${project.id}`, title: project.title, icon: "📁", type: "project",
+      id: `proj-${project.id}`, title: project.title, type: "project",
       start: project.startDate ? new Date(project.startDate) : daysBefore(end, 90), end,
       status: project.status, progress: project.progressPercentage || 0,
     });
@@ -30,13 +29,13 @@ export function buildGanttItems(project: Project | undefined, milestones: Milest
   for (const m of milestones) {
     if (!m.dueDate) continue;
     const end = new Date(m.dueDate);
-    items.push({ id: `ms-${m.id}`, title: m.title, icon: "🎯", type: "milestone", start: daysBefore(end, 14), end, status: m.status, progress: m.progressPercentage || 0 });
+    items.push({ id: `ms-${m.id}`, title: m.title, type: "milestone", start: daysBefore(end, 14), end, status: m.status, progress: m.progressPercentage || 0 });
   }
   for (const task of tasks) {
     if (!task.dueDate) continue;
     const end = new Date(task.dueDate);
     const status: GanttStatus = task.status === "done" ? "completed" : task.status === "in_progress" ? "in_progress" : "pending";
-    items.push({ id: `task-${task.id}`, title: task.title, icon: "✅", type: "task", start: daysBefore(end, 7), end, status, progress: status === "completed" ? 100 : status === "in_progress" ? 50 : 0 });
+    items.push({ id: `task-${task.id}`, title: task.title, type: "task", start: daysBefore(end, 7), end, status, progress: status === "completed" ? 100 : status === "in_progress" ? 50 : 0 });
   }
   return items.sort((a, b) => a.start.getTime() - b.start.getTime());
 }

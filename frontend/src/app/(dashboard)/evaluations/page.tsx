@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Plus } from "lucide-react";
+import { ClipboardCheck, Plus } from "lucide-react";
 import { apiFetch, apiFetchAll } from "@/lib/api";
 import { storedUser, visibleProjects } from "@/lib/projects";
 import { useRole } from "@/hooks/useRole";
@@ -56,11 +56,11 @@ export default function EvaluationsPage() {
         </SelectField>
 
         {!projectId ? (
-          <EmptyState icon="📝" title={t("evaluations.selectProjectHint")} />
+          <EmptyState icon={ClipboardCheck} title={t("evaluations.selectProjectHint")} />
         ) : loading ? (
           <LoadingState label={t("evaluations.loading")} />
         ) : evals.length === 0 ? (
-          <EmptyState icon="📝" title={t("evaluations.none")} action={can.createEvaluation ? newButton(t("evaluations.addEvaluation")) : undefined} />
+          <EmptyState icon={ClipboardCheck} title={t("evaluations.none")} action={can.createEvaluation ? newButton(t("evaluations.addEvaluation")) : undefined} />
         ) : (
           <>
             <EvaluationSummary evals={evals} />

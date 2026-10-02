@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { CheckCheck, ClipboardCheck, Clock, Folder, FolderCheck, ListChecks, TrendingUp, Users, type LucideIcon } from "lucide-react";
 import { Topbar } from "@/components/layout/Topbar";
 import { storedUser } from "@/lib/projects";
 import { useT } from "@/i18n";
@@ -9,7 +9,16 @@ import { loadDashboard, percent, type DashboardData } from "./dashboardData";
 import { AdminPanels, ProfessorPanels, StudentPanels } from "./DashboardPanels";
 import type { User } from "@/types";
 
-type Stat = { icon: string; label: string; value: string | number; sub: string; bg: string };
+type Tone = "blue" | "green" | "amber" | "rose";
+type Stat = { icon: LucideIcon; label: string; value: string | number; sub: string; tone: Tone };
+
+// Clase scrise complet, ca Tailwind sa le gaseasca la build
+const TONE: Record<Tone, { border: string; icon: string }> = {
+  blue: { border: "border-t-tone-blue dark:border-t-tone-blue", icon: "text-tone-blue" },
+  green: { border: "border-t-tone-green dark:border-t-tone-green", icon: "text-tone-green" },
+  amber: { border: "border-t-tone-amber dark:border-t-tone-amber", icon: "text-tone-amber" },
+  rose: { border: "border-t-tone-rose dark:border-t-tone-rose", icon: "text-tone-rose" },
+};
 
 function useStats(user: User | null, data: DashboardData | null): Stat[] {
   const { t } = useT();
@@ -19,29 +28,29 @@ function useStats(user: User | null, data: DashboardData | null): Stat[] {
   const activeAll = all.filter(p => p.status === "in_progress").length;
 
   if (user.role === "student") return [
-    { icon: "📁", label: t("dashboard.stat.totalProjects"), value: all.length, sub: t("dashboard.stat.mineCount", { count: data.myProjects.length }), bg: "bg-blue-50 dark:bg-blue-950" },
-    { icon: "🎯", label: t("dashboard.stat.myProjects"), value: data.myProjects.length, sub: t("dashboard.stat.activeTotal", { count: activeAll }), bg: "bg-violet-50 dark:bg-violet-950" },
-    { icon: "✅", label: t("dashboard.stat.tasksDone"), value: data.myTasks.filter(x => x.status === "done").length, sub: t("dashboard.stat.ofMyTasks"), bg: "bg-green-50 dark:bg-green-950" },
-    { icon: "📈", label: t("dashboard.stat.completionRate"), value: `${percent(completedAll, all.length)}%`, sub: t("dashboard.stat.ofAllProjects"), bg: "bg-purple-50 dark:bg-purple-950" },
+    { icon: Folder, label: t("dashboard.stat.totalProjects"), value: all.length, sub: t("dashboard.stat.mineCount", { count: data.myProjects.length }), tone: "blue" },
+    { icon: FolderCheck, label: t("dashboard.stat.myProjects"), value: data.myProjects.length, sub: t("dashboard.stat.activeTotal", { count: activeAll }), tone: "rose" },
+    { icon: ListChecks, label: t("dashboard.stat.tasksDone"), value: data.myTasks.filter(x => x.status === "done").length, sub: t("dashboard.stat.ofMyTasks"), tone: "green" },
+    { icon: TrendingUp, label: t("dashboard.stat.completionRate"), value: `${percent(completedAll, all.length)}%`, sub: t("dashboard.stat.ofAllProjects"), tone: "amber" },
   ];
   if (user.role === "professor") {
     const mine = data.myProjects;
     const done = mine.filter(p => p.status === "completed").length;
     return [
-      { icon: "📁", label: t("dashboard.stat.coordinated"), value: mine.length, sub: t("dashboard.stat.active", { count: mine.filter(p => p.status === "in_progress").length }), bg: "bg-blue-50 dark:bg-blue-950" },
-      { icon: "✅", label: t("dashboard.stat.completed"), value: done, sub: t("dashboard.stat.rate", { value: percent(done, mine.length) }), bg: "bg-green-50 dark:bg-green-950" },
-      { icon: "📝", label: t("dashboard.stat.pendingEvaluations"), value: data.pendingEvaluations.length, sub: t("dashboard.stat.needCompleting"), bg: "bg-amber-50 dark:bg-amber-950" },
-      { icon: "⏰", label: t("dashboard.stat.deadlines7"), value: data.upcomingMilestones.length, sub: t("dashboard.stat.upcomingMilestones"), bg: "bg-red-50 dark:bg-red-950" },
+      { icon: Folder, label: t("dashboard.stat.coordinated"), value: mine.length, sub: t("dashboard.stat.active", { count: mine.filter(p => p.status === "in_progress").length }), tone: "blue" },
+      { icon: CheckCheck, label: t("dashboard.stat.completed"), value: done, sub: t("dashboard.stat.rate", { value: percent(done, mine.length) }), tone: "green" },
+      { icon: ClipboardCheck, label: t("dashboard.stat.pendingEvaluations"), value: data.pendingEvaluations.length, sub: t("dashboard.stat.needCompleting"), tone: "amber" },
+      { icon: Clock, label: t("dashboard.stat.deadlines7"), value: data.upcomingMilestones.length, sub: t("dashboard.stat.upcomingMilestones"), tone: "rose" },
     ];
   }
   const students = data.users.filter(u => u.role === "student").length;
   const professors = data.users.filter(u => u.role === "professor").length;
   const tasksDone = data.allTasks.filter(x => x.status === "done").length;
   return [
-    { icon: "📁", label: t("dashboard.stat.totalProjects"), value: all.length, sub: t("dashboard.stat.active", { count: activeAll }), bg: "bg-blue-50 dark:bg-blue-950" },
-    { icon: "👥", label: t("dashboard.stat.totalUsers"), value: students + professors, sub: t("dashboard.stat.usersSplit", { students, professors }), bg: "bg-amber-50 dark:bg-amber-950" },
-    { icon: "✅", label: t("dashboard.stat.tasksDone"), value: `${tasksDone}/${data.allTasks.length}`, sub: t("dashboard.stat.rate", { value: percent(tasksDone, data.allTasks.length) }), bg: "bg-green-50 dark:bg-green-950" },
-    { icon: "📈", label: t("dashboard.stat.finishRate"), value: `${percent(completedAll, all.length)}%`, sub: t("dashboard.stat.projectsCompleted"), bg: "bg-purple-50 dark:bg-purple-950" },
+    { icon: Folder, label: t("dashboard.stat.totalProjects"), value: all.length, sub: t("dashboard.stat.active", { count: activeAll }), tone: "blue" },
+    { icon: Users, label: t("dashboard.stat.totalUsers"), value: students + professors, sub: t("dashboard.stat.usersSplit", { students, professors }), tone: "rose" },
+    { icon: ListChecks, label: t("dashboard.stat.tasksDone"), value: `${tasksDone}/${data.allTasks.length}`, sub: t("dashboard.stat.rate", { value: percent(tasksDone, data.allTasks.length) }), tone: "green" },
+    { icon: TrendingUp, label: t("dashboard.stat.finishRate"), value: `${percent(completedAll, all.length)}%`, sub: t("dashboard.stat.projectsCompleted"), tone: "amber" },
   ];
 }
 
@@ -71,34 +80,24 @@ export default function DashboardPage() {
     <div className="flex-1 flex flex-col overflow-hidden">
       <Topbar title={t("nav.dashboard")} action={{ label: t("projects.newProject"), onClick: () => router.push("/projects") }} />
       <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-slate-50 dark:bg-slate-950 transition-colors">
-        <div className="mb-6 flex flex-col sm:flex-row sm:items-center gap-4">
-          <Link href="/profile" className="flex items-center gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 shadow-sm hover:border-blue-300 dark:hover:border-blue-700 transition-colors sm:flex-shrink-0">
-            <span className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-xl font-bold text-blue-700 dark:text-blue-300 overflow-hidden flex-shrink-0" aria-hidden="true">
-              {user?.avatar ? <img src={user.avatar} className="w-full h-full object-cover" alt="" /> : `${user?.firstName?.[0] ?? ""}${user?.lastName?.[0] ?? ""}`}
-            </span>
-            <span>
-              <span className="block text-sm font-bold dark:text-slate-100">{user?.firstName} {user?.lastName}</span>
-              <span className="block text-xs text-slate-500 dark:text-slate-400">{user && t(`roles.${user.role}`)} · {user?.faculty || t("settings.noFaculty")}</span>
-              <span className="block text-xs text-blue-700 mt-0.5 dark:text-blue-400">{t("dashboard.viewProfile")} →</span>
-            </span>
-          </Link>
-          <div className="flex-1">
-            <h2 className="text-xl font-bold dark:text-slate-100">{greeting}, {user?.firstName || ""}! <span aria-hidden="true">👋</span></h2>
-            <p className="text-slate-600 dark:text-slate-400 text-sm mt-1">
-              <span className="capitalize">{new Date().toLocaleDateString(locale === "ro" ? "ro-RO" : "en-GB", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}</span>
-              {subtitle && ` — ${subtitle}`}
-            </p>
-          </div>
+        <div className="mb-6">
+          <p className="text-sm text-slate-500 dark:text-slate-400 capitalize">
+            {new Date().toLocaleDateString(locale === "ro" ? "ro-RO" : "en-GB", { weekday: "long", day: "numeric", month: "long" })}
+          </p>
+          <h2 className="text-xl font-bold dark:text-slate-100 mt-0.5">{greeting}, {user?.firstName || ""}</h2>
+          {subtitle && <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">{subtitle}</p>}
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           {(stats.length ? stats : Array.from({ length: 4 }, () => null)).map((s, i) => (
-            <div key={i} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:p-5 shadow-sm">
+            <div key={i} className={`bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 border-t-[3px] rounded-xl p-4 sm:p-5 shadow-sm ${s ? TONE[s.tone].border : ""}`}>
               {s ? (
                 <>
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-xl mb-3 ${s.bg}`} aria-hidden="true">{s.icon}</div>
-                  <div className="text-2xl font-bold dark:text-slate-100 mb-1">{loading ? "…" : s.value}</div>
-                  <div className="text-sm text-slate-600 dark:text-slate-400">{s.label}</div>
+                  <div className="flex items-start justify-between gap-2 text-sm text-slate-600 dark:text-slate-400">
+                    {s.label}
+                    <s.icon className={`w-4 h-4 flex-shrink-0 mt-0.5 ${TONE[s.tone].icon}`} aria-hidden="true" />
+                  </div>
+                  <div className="text-2xl font-bold tabular-nums dark:text-slate-100 mt-2">{loading ? "…" : s.value}</div>
                   <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">{s.sub}</div>
                 </>
               ) : <div className="h-28 animate-pulse bg-slate-100 dark:bg-slate-800 rounded-lg" aria-hidden="true" />}

@@ -99,6 +99,18 @@ export function useFormat() {
       value ? new Date(value).toLocaleDateString(tag, opts) : "—",
     dateTime: (value?: string | Date | null) =>
       value ? new Date(value).toLocaleString(tag, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "—",
+    // "acum 5 minute", "ieri"; dupa o saptamana, data obisnuita
+    relative: (value?: string | Date | null) => {
+      if (!value) return "—";
+      const seconds = (new Date(value).getTime() - Date.now()) / 1000;
+      const abs = Math.abs(seconds);
+      if (abs >= 7 * 86400) return new Date(value).toLocaleString(tag, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+      const rtf = new Intl.RelativeTimeFormat(tag, { numeric: "auto" });
+      if (abs < 60) return rtf.format(0, "second");
+      if (abs < 3600) return rtf.format(Math.round(seconds / 60), "minute");
+      if (abs < 86400) return rtf.format(Math.round(seconds / 3600), "hour");
+      return rtf.format(Math.round(seconds / 86400), "day");
+    },
     number: (value: number, digits = 0) => value.toLocaleString(tag, { maximumFractionDigits: digits }),
     fileSize: (bytes: number) => {
       if (!bytes) return "0 B";

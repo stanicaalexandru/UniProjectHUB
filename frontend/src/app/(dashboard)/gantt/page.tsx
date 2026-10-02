@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { RefreshCw } from "lucide-react";
+import { ChartGantt, RefreshCw } from "lucide-react";
 import { apiFetch, apiFetchAll } from "@/lib/api";
 import { storedUser, visibleProjects } from "@/lib/projects";
 import { useT, useErrorMessage, useFormat } from "@/i18n";
@@ -81,11 +81,11 @@ export default function GanttPage() {
         </div>
 
         {!projectId ? (
-          <EmptyState icon="📊" title={t("gantt.selectProject")} description={t("gantt.selectProjectHint")} />
+          <EmptyState icon={ChartGantt} title={t("gantt.selectProject")} description={t("gantt.selectProjectHint")} />
         ) : loading ? (
           <LoadingState label={t("gantt.generating")} />
         ) : items.length === 0 ? (
-          <EmptyState icon="📊" title={t("gantt.noItems")} description={t("gantt.noItemsHint")} />
+          <EmptyState icon={ChartGantt} title={t("gantt.noItems")} description={t("gantt.noItemsHint")} />
         ) : (
           <div className="card overflow-x-auto">
             <div className="flex min-w-[760px]">
@@ -97,7 +97,7 @@ export default function GanttPage() {
                 {items.map(item => (
                   <div key={item.id} className="h-12 border-b last:border-0 border-slate-100 dark:border-slate-800 flex items-center px-4 gap-2">
                     <span className={`w-2 h-2 rounded-full flex-shrink-0 ${colorOf(item.status)}`} aria-hidden="true" />
-                    <span className="text-xs text-slate-700 dark:text-slate-300 truncate font-medium" title={item.title}><span aria-hidden="true">{item.icon} </span>{item.title}</span>
+                    <span className="text-xs text-slate-700 dark:text-slate-300 truncate font-medium" title={item.title}>{item.title}</span>
                   </div>
                 ))}
               </div>
