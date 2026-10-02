@@ -4,6 +4,10 @@ A web platform for managing university student projects: teams, milestones, task
 evaluations with rubrics, chat and PDF reports, in one place. It started as my bachelor thesis and is
 maintained as a portfolio project.
 
+**Live demo:** [uniprojecthub-demo.vercel.app](https://uniprojecthub-demo.vercel.app) — one-click student and
+professor accounts on the sign-in page; data is reset daily. The free API server sleeps when idle, so the first
+request can take up to a minute.
+
 **Stack:** Next.js 15 · React 19 · TypeScript · Tailwind CSS — NestJS 11 · TypeORM · PostgreSQL
 
 The interface is available in **Romanian and English** (switchable at any time).
