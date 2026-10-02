@@ -12,6 +12,7 @@ import { MessageComposer } from "./MessageComposer";
 import type { ActiveRoom, Attachment, ChatMessage, RoomType } from "./chatTypes";
 import type { Project, Team, User } from "@/types";
 import { BackButton } from "@/components/ui/BackButton";
+import { usePageTitle } from "@/lib/usePageTitle";
 
 const POLL_MS = 3000;
 const listOf = <T,>(r: PromiseSettledResult<unknown>): T[] | null =>
@@ -30,6 +31,7 @@ function RoomButton({ active, icon: Icon, label, count, onClick }: { active: boo
 
 export default function ChatPage() {
   const { t } = useT();
+  usePageTitle(t("nav.chat"));
   const errorMessage = useErrorMessage();
   const toast = useToast();
   const confirm = useConfirm();

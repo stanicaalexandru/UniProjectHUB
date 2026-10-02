@@ -126,7 +126,7 @@ export default function GanttPage() {
                       ))}
                       <div className="absolute h-6 rounded-full flex items-center overflow-hidden shadow-sm group"
                         style={{ ...timeline.barStyle(item), minWidth: "4px" }}
-                        title={`${item.title} — ${format.date(item.start)} → ${format.date(item.end)}`}
+                        title={`${item.title}: ${format.date(item.start)} – ${format.date(item.end)}`}
                         role="img" aria-label={t("gantt.barLabel", { title: item.title, start: format.date(item.start), end: format.date(item.end), progress: item.progress })}>
                         <div className={`absolute inset-0 ${colorOf(item.status)} opacity-90 group-hover:opacity-100 transition-opacity rounded-full`} />
                         <div className={`absolute top-0 bottom-0 left-0 ${colorOf(item.status)} rounded-full`} style={{ width: `${item.progress}%`, filter: "brightness(1.2)" }} />

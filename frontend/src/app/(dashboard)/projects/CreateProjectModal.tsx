@@ -126,7 +126,7 @@ export function CreateProjectModal({ teams, professors, onClose, onCreated }: { 
 
         <SelectField label={t("projects.coordinator")} value={form.coordinatorId} onChange={e => set("coordinatorId", e.target.value)}>
           <option value="">{t("projects.noCoordinator")}</option>
-          {professors.map(p => <option key={p.id} value={p.id}>{p.firstName} {p.lastName}{p.department ? ` — ${p.department}` : ""}</option>)}
+          {professors.map(p => <option key={p.id} value={p.id}>{p.firstName} {p.lastName}{p.department ? ` · ${p.department}` : ""}</option>)}
         </SelectField>
 
         {!template ? (

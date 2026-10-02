@@ -16,8 +16,10 @@ import { appError } from '../common/errors';
 import { CreateProjectDto, MilestoneDto, UpdateProjectDto } from './dto';
 
 const fullName = (u: Pick<User, 'firstName' | 'lastName'>) => `${u.firstName} ${u.lastName}`;
-const STATUS_LABELS: Record<string, string> = { draft: 'Draft', proposed: 'Propus', approved: 'Aprobat', in_progress: 'In progres',
-  review: 'Review', completed: 'Finalizat', archived: 'Arhivat', rejected: 'Respins' };
+// Aceleasi denumiri ca in interfata (projectStatus.* din dictionarul romanesc)
+const STATUS_LABELS: Record<string, string> = { draft: 'Ciornă', proposed: 'Propus', approved: 'Aprobat', in_progress: 'În desfășurare',
+  review: 'În evaluare', completed: 'Finalizat', archived: 'Arhivat', rejected: 'Respins' };
+const statusLabel = (status: string) => STATUS_LABELS[status] || status;
 
 // Campuri descriptive, pe care le poate edita si echipa (cat timp proiectul e in draft/proposed)
 const DETAIL_FIELDS = ['title', 'description', 'objectives', 'type', 'priority', 'startDate', 'endDate',
@@ -115,13 +117,13 @@ export class ProjectsService {
       startDate: dto.startDate || new Date(),
     });
     const saved = await this.projectRepo.save(project);
-        await this.logActivity(saved.id, creator.id, 'PROJECT_CREATED', `Proiectul "${saved.title}" a fost creat`);
+        await this.logActivity(saved.id, creator.id, 'PROJECT_CREATED', `Proiectul „${saved.title}” a fost creat`);
     const link = { actionUrl: `/projects/${saved.id}`, entityType: 'project', entityId: saved.id };
     await this.notifications.notify([saved.coordinatorId], { type: NotificationType.INFO, title: 'Ai fost ales coordonator',
-      message: `${fullName(creator)} te-a ales coordonator pentru proiectul "${saved.title}".`, ...link }, { exclude: creator.id });
+      message: `${fullName(creator)} te-a ales coordonator pentru proiectul „${saved.title}”.`, ...link }, { exclude: creator.id });
     const { memberIds } = await this.access.audience(saved.id);
-    await this.notifications.notify(memberIds, { type: NotificationType.TEAM, title: 'Proiect nou in echipa',
-      message: `${fullName(creator)} a creat proiectul "${saved.title}".`, ...link }, { exclude: creator.id });
+    await this.notifications.notify(memberIds, { type: NotificationType.TEAM, title: 'Proiect nou în echipă',
+      message: `${fullName(creator)} a creat proiectul „${saved.title}”.`, ...link }, { exclude: creator.id });
     return saved;
   }
 
@@ -154,14 +156,14 @@ export class ProjectsService {
     if (Object.keys(dto).length) await this.projectRepo.update(id, dto);
     const saved = await this.findOne(id);
     if (oldStatus !== saved.status) {
-      await this.logActivity(id, user.id, 'STATUS_CHANGED', `Status schimbat din ${oldStatus} in ${saved.status}`);
-      await this.notifyProject(id, user, { type: NotificationType.INFO, title: `Proiectul "${saved.title}": ${STATUS_LABELS[saved.status] || saved.status}`,
-        message: `${fullName(user)} a schimbat statusul proiectului in "${STATUS_LABELS[saved.status] || saved.status}".` });
+      await this.logActivity(id, user.id, 'STATUS_CHANGED', `Starea s-a schimbat din „${statusLabel(oldStatus)}” în „${statusLabel(saved.status)}”`);
+      await this.notifyProject(id, user, { type: NotificationType.INFO, title: `Proiectul „${saved.title}”: ${statusLabel(saved.status)}`,
+        message: `${fullName(user)} a schimbat starea proiectului în „${statusLabel(saved.status)}”.` });
     }
     // Modificarile asupra celorlalte campuri sunt consemnate separat
     const editedFields = Object.keys(dto).filter(k => k !== 'status');
     if (editedFields.length > 0) {
-      await this.logActivity(id, user.id, 'PROJECT_UPDATED', `Detaliile proiectului "${saved.title}" au fost actualizate`);
+      await this.logActivity(id, user.id, 'PROJECT_UPDATED', `Detaliile proiectului „${saved.title}” au fost actualizate`);
     }
     return saved;
   }
@@ -230,9 +232,9 @@ export class ProjectsService {
     await this.access.assertProject(user, projectId);
     const milestone = this.milestoneRepo.create({ ...pick<Milestone>(input, MILESTONE_FIELDS), projectId });
     const saved = await this.milestoneRepo.save(milestone);
-        await this.logActivity(projectId, user.id, 'MILESTONE_CREATED', `Milestone-ul "${saved.title}" a fost creat`);
-    await this.notifyProject(projectId, user, { type: NotificationType.INFO, title: 'Milestone nou',
-      message: `${fullName(user)} a adaugat milestone-ul "${saved.title}".` });
+        await this.logActivity(projectId, user.id, 'MILESTONE_CREATED', `Etapa „${saved.title}” a fost creată`);
+    await this.notifyProject(projectId, user, { type: NotificationType.INFO, title: 'Etapă nouă',
+      message: `${fullName(user)} a adăugat etapa „${saved.title}”.` });
     return saved;
   }
 
@@ -245,8 +247,8 @@ export class ProjectsService {
     const milestone = await this.milestoneRepo.findOne({ where: { id } });
     await this.updateProgress(milestone.projectId);
     if (dto.status === 'completed' && existing.status !== 'completed') {
-      await this.notifyProject(milestone.projectId, user, { type: NotificationType.SUCCESS, title: 'Milestone finalizat',
-        message: `${fullName(user)} a finalizat milestone-ul "${milestone.title}".` });
+      await this.notifyProject(milestone.projectId, user, { type: NotificationType.SUCCESS, title: 'Etapă finalizată',
+        message: `${fullName(user)} a finalizat etapa „${milestone.title}”.` });
     }
     return milestone;
   }
@@ -266,10 +268,10 @@ export class ProjectsService {
     if (!content || typeof content !== 'string' || !content.trim()) throw new BadRequestException(appError('COMMENT_EMPTY'));
     const comment = this.commentRepo.create({ projectId, content: content.slice(0, 5000), authorId: user.id });
     const saved = await this.commentRepo.save(comment);
-    await this.logActivity(projectId, user.id, 'COMMENT_ADDED', 'A fost adaugat un comentariu');
+    await this.logActivity(projectId, user.id, 'COMMENT_ADDED', 'A fost adăugat un comentariu');
     const project = await this.projectRepo.findOne({ where: { id: projectId } });
     const preview = content.trim().length > 60 ? `${content.trim().slice(0, 60)}...` : content.trim();
-    await this.notifyProject(projectId, user, { type: NotificationType.INFO, title: `Comentariu nou pe "${project?.title}"`,
+    await this.notifyProject(projectId, user, { type: NotificationType.INFO, title: `Comentariu nou la „${project?.title}”`,
       message: `${fullName(user)}: "${preview}"` });
     return saved;
   }

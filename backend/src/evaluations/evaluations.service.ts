@@ -11,7 +11,7 @@ import { NotificationType } from '../notifications/entities/notification.entity'
 import { appError } from '../common/errors';
 import { CompleteEvaluationDto, CreateEvaluationDto } from './dto';
 
-const PHASE_LABELS: Record<string, string> = { proposal: 'Propunere', midterm: 'Intermediar', final: 'Final', defense: 'Sustinere' };
+const PHASE_LABELS: Record<string, string> = { proposal: 'Propunere', midterm: 'Intermediară', final: 'Finală', defense: 'Susținere' };
 const clip = (s: unknown, max = 5000) => (typeof s === 'string' ? s.slice(0, max) : undefined);
 
 @Injectable()
@@ -116,10 +116,10 @@ export class EvaluationsService {
     const phase = PHASE_LABELS[evaluation.phase] || evaluation.phase;
     await this.notifications.notify(memberIds, {
       type: NotificationType.EVALUATION,
-      title: isCorrection ? `Evaluare corectata: ${phase}` : `Evaluare finalizata: ${phase}`,
+      title: isCorrection ? `Evaluare corectată: ${phase}` : `Evaluare finalizată: ${phase}`,
       message: isCorrection
-        ? `Scorul s-a schimbat din ${Number(evaluation.totalScore)} in ${total}/${max} puncte. Motiv: ${reason.slice(0, 200)}`
-        : `Evaluarea "${phase}" a proiectului "${evaluation.project?.title}" a fost completata: ${total}/${max} puncte.`,
+        ? `Scorul s-a schimbat din ${Number(evaluation.totalScore)} în ${total}/${max} puncte. Motiv: ${reason.slice(0, 200)}`
+        : `Evaluarea „${phase}” a proiectului „${evaluation.project?.title}” a fost finalizată: ${total}/${max} puncte.`,
       actionUrl: '/evaluations', entityType: 'evaluation', entityId: id,
     }, { exclude: user.id, pref: 'evals' });
     return this.findOne(id);

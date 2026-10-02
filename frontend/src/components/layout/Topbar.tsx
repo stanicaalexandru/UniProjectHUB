@@ -7,6 +7,7 @@ import { apiFetch, apiFetchAll } from "@/lib/api";
 import { useT } from "@/i18n";
 import { Spinner } from "@/components/ui/States";
 import type { Project, Task, User } from "@/types";
+import { usePageTitle } from "@/lib/usePageTitle";
 
 interface TopbarProps {
   title: string;
@@ -27,6 +28,7 @@ const listOf = <T,>(r: PromiseSettledResult<T[] | { data?: T[] }>): T[] =>
 
 export function Topbar({ title, action }: TopbarProps) {
   const { t } = useT();
+  usePageTitle(title);
   const [search, setSearch] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);

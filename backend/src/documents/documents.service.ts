@@ -69,7 +69,7 @@ export class DocumentsService {
     await this.versionRepo.save(this.versionRepo.create({ documentId: saved.id, version: 1, filename: file.filename, storagePath: file.path, size: file.size, uploadedById: user.id }));
     const { coordinatorId, memberIds } = await this.access.audience(dto.projectId);
     await this.notifications.notify([coordinatorId, ...memberIds], { type: NotificationType.INFO, title: 'Document nou',
-      message: `${user.firstName} ${user.lastName} a adaugat documentul "${saved.name}".`,
+      message: `${user.firstName} ${user.lastName} a adăugat documentul „${saved.name}”.`,
       actionUrl: `/projects/${dto.projectId}`, entityType: 'document', entityId: saved.id }, { exclude: user.id });
     return saved;
   }

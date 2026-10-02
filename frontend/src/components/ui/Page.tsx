@@ -1,8 +1,11 @@
+"use client";
 import { BackButton } from "@/components/ui/BackButton";
+import { usePageTitle } from "@/lib/usePageTitle";
 
 // Structura comuna a paginilor din aplicatie: antet cu sageata inapoi, titlu si actiuni, apoi continutul care se deruleaza
 
 export function PageHeader({ title, children }: { title: React.ReactNode; children?: React.ReactNode }) {
+  usePageTitle(title);
   return (
     <header className="page-header">
       <BackButton />

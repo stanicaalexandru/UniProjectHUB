@@ -26,8 +26,8 @@ export class TasksService {
   ) {}
 
   private async notifyAssignee(task: Task, actor: User) {
-    await this.notifications.notify([task.assigneeId], { type: NotificationType.INFO, title: 'Task nou asignat',
-      message: `${actor.firstName} ${actor.lastName} ti-a asignat task-ul "${task.title}".`,
+    await this.notifications.notify([task.assigneeId], { type: NotificationType.INFO, title: 'Sarcină nouă',
+      message: `${actor.firstName} ${actor.lastName} ți-a atribuit sarcina „${task.title}”.`,
       actionUrl: '/tasks', entityType: 'task', entityId: task.id }, { exclude: actor.id });
   }
 

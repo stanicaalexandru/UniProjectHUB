@@ -97,7 +97,7 @@ export function CompleteEvaluationModal({ ev, onClose, onSaved }: { ev: Evaluati
 
   return (
     <Modal size="lg" onClose={onClose}
-      title={`${isCorrection ? t("evaluations.correctTitle") : t("evaluations.completeTitle")} — ${t(`evaluationPhase.${ev.phase}`)}`}
+      title={`${isCorrection ? t("evaluations.correctTitle") : t("evaluations.completeTitle")}: ${t(`evaluationPhase.${ev.phase}`)}`}
       subtitle={isCorrection ? t("evaluations.correctHint") : t("evaluations.completeHint")}>
       <form onSubmit={submit} className="space-y-4">
         <div className="bg-blue-700 rounded-xl p-4 text-white flex items-center gap-4" aria-live="polite">

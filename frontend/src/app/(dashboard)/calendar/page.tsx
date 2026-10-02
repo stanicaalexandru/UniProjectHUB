@@ -63,7 +63,7 @@ export default function CalendarPage() {
   const weekDays = Array.from({ length: 7 }, (_, i) => new Date(weekStart.getFullYear(), weekStart.getMonth(), weekStart.getDate() + i));
   const heading = view === "month"
     ? month.toLocaleDateString(tag, { month: "long", year: "numeric" })
-    : `${weekDays[0].toLocaleDateString(tag, { day: "numeric", month: "short" })} — ${weekDays[6].toLocaleDateString(tag, { day: "numeric", month: "short", year: "numeric" })}`;
+    : `${weekDays[0].toLocaleDateString(tag, { day: "numeric", month: "short" })} – ${weekDays[6].toLocaleDateString(tag, { day: "numeric", month: "short", year: "numeric" })}`;
 
   const upcoming = events.filter(e => e.date >= todayKey).sort((a, b) => a.date.localeCompare(b.date)).slice(0, 8);
   const selectedEvents = selected ? eventsOn(selected) : [];

@@ -53,7 +53,7 @@ export class DeadlineScheduler {
         if (daysLeft <= 0 || daysLeft > 7) continue;
 
         const projectTitle = milestone.project?.title || 'proiect';
-        const message = `Milestone-ul "${milestone.title}" din proiectul "${projectTitle}" expira in ${daysLeft} ${daysLeft === 1 ? 'zi' : 'zile'} (${dueDate.toLocaleDateString('ro')}).`;
+        const message = `Etapa „${milestone.title}” din proiectul „${projectTitle}” are termen peste ${daysLeft} ${daysLeft === 1 ? 'zi' : 'zile'} (${dueDate.toLocaleDateString('ro')}).`;
 
         // Doar persoanele care sunt implicate in acest proiect primesc notificari
         const recipients = this.getProjectRecipients(milestone.project);
@@ -89,8 +89,8 @@ export class DeadlineScheduler {
           await this.notificationsService.create({
             userId,
             type: NotificationType.DEADLINE,
-            title: 'Termen depasit',
-            message: `Milestone-ul "${milestone.title}" din proiectul "${projectTitle}" a depasit termenul limita.`,
+            title: 'Termen depășit',
+            message: `Etapa „${milestone.title}” din proiectul „${projectTitle}” a depășit termenul limită.`,
             actionUrl: milestone.project?.id ? `/projects/${milestone.project.id}` : '/calendar',
             entityType: 'project',
             entityId: milestone.project?.id,

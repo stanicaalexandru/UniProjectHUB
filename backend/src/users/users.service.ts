@@ -60,7 +60,7 @@ export class UsersService {
     // Profesorul aprobat de admin afla imediat ce se autentifica
     if (before?.status === UserStatus.PENDING_APPROVAL && dto.status === UserStatus.ACTIVE) {
       await this.notifications.notify([id], { type: NotificationType.SYSTEM, title: 'Cont aprobat',
-        message: 'Contul tau de profesor a fost aprobat de un administrator. Bun venit in UniProject Hub!' });
+        message: 'Contul tău de profesor a fost aprobat de un administrator. Bun venit în UniProject Hub!' });
       this.mailService.sendWelcomeEmail(before.email, before.firstName, before.role).catch(() => {});
     }
     return this.findOne(id);
@@ -96,7 +96,7 @@ export class UsersService {
     const hashed = await bcrypt.hash(newPassword, 10);
     // Schimbarea parolei inchide celelalte sesiuni (refresh token invalidat)
     await this.userRepo.update(id, { password: hashed, refreshToken: null });
-    return { success: true, message: 'Parola schimbata cu succes!' };
+    return { success: true, message: 'Parola a fost schimbată.' };
   }
 
   private async assertPassword(id: string, password: string) {
@@ -120,7 +120,7 @@ export class UsersService {
 
   // Raspuns identic daca emailul exista sau nu, ca sa nu se poata afla ce conturi sunt inregistrate
   async requestPasswordReset(email: string) {
-    const generic = { success: true, message: 'Daca exista un cont cu acest email, am trimis un cod de resetare.' };
+    const generic = { success: true, message: 'Dacă există un cont cu acest email, am trimis un cod de resetare.' };
     const user = typeof email === 'string' ? await this.userRepo.findOne({ where: { email } }) : null;
     if (!user || user.status !== UserStatus.ACTIVE) return generic;
     const code = generateCode();
@@ -146,7 +146,7 @@ export class UsersService {
       password: hashed, passwordResetToken: null, passwordResetExpires: null, codeAttempts: 0,
       refreshToken: null, failedLoginAttempts: 0, lockoutUntil: null,
     });
-    return { success: true, message: 'Parola schimbata cu succes!' };
+    return { success: true, message: 'Parola a fost schimbată.' };
   }
 
   // Stergerea contului (GDPR art. 17). Datele personale se sterg, contributiile comune cu echipa
@@ -213,6 +213,6 @@ export class UsersService {
       await em.query(`DELETE FROM users WHERE id = $1`, [id]);
     });
 
-    return { success: true, message: 'Contul a fost sters.' };
+    return { success: true, message: 'Contul a fost șters.' };
   }
 }

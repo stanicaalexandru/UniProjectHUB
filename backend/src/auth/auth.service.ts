@@ -103,10 +103,10 @@ export class AuthService {
       const admins = await this.userRepo.find({ where: { role: UserRole.ADMIN, status: UserStatus.ACTIVE } });
       await this.notifications.notify(admins.map((a) => a.id), {
         type: NotificationType.SYSTEM, title: 'Cont de profesor de aprobat',
-        message: `${user.firstName} ${user.lastName} (${user.email}) s-a inregistrat ca profesor si asteapta aprobarea.`,
+        message: `${user.firstName} ${user.lastName} (${user.email}) s-a înregistrat ca profesor și așteaptă aprobarea.`,
         actionUrl: '/users', entityType: 'user', entityId: user.id,
       });
-      return { pendingApproval: true, message: 'Email confirmat. Contul de profesor va fi activat dupa aprobarea unui administrator.' };
+      return { pendingApproval: true, message: 'Email confirmat. Contul de profesor va fi activat după aprobarea unui administrator.' };
     }
     // Emailul de bun venit nu trebuie sa blocheze autentificarea daca serverul de email nu raspunde
     this.mailService.sendWelcomeEmail(user.email, user.firstName, user.role).catch(() => {});

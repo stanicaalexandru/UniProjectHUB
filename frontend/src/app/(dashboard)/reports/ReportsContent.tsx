@@ -154,7 +154,7 @@ export default function ReportsContent() {
           <>
             <SelectField label={t("reports.selectStudent")} wrapperClassName="mb-6 max-w-sm" value={studentId} onChange={e => loadStudent(e.target.value)}>
               <option value="">{t("teams.chooseStudent")}</option>
-              {students.map(s => <option key={s.id} value={s.id}>{s.firstName} {s.lastName} — {s.email}</option>)}
+              {students.map(s => <option key={s.id} value={s.id}>{s.firstName} {s.lastName} · {s.email}</option>)}
             </SelectField>
             {!studentId ? <EmptyState icon={UserRound} title={t("reports.pickStudent")} description={t("reports.pickStudentHint")} /> : loading ? <LoadingState label={t("common.loading")} /> : studentData && (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">

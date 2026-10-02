@@ -105,11 +105,11 @@ export class ChatService {
   private async notifyParticipants(room: ChatRoom, sender: User, text: string) {
     const ids = await this.participantIds(room);
     const users = ids.length ? await this.userRepo.find({ where: { id: In(ids) } }) : [];
-    const preview = text ? `"${text.length > 60 ? `${text.slice(0, 60)}...` : text}"` : 'a trimis un fisier';
+    const preview = text ? `"${text.length > 60 ? `${text.slice(0, 60)}...` : text}"` : 'a trimis un fișier';
     const senderName = `${sender.firstName} ${sender.lastName}`;
     const mentioned = users.filter((u) => text.includes(`@${u.firstName} ${u.lastName}`)).map((u) => u.id);
     const base = { actionUrl: '/chat', entityType: 'chat_room', entityId: room.id };
-    await this.notifications.notify(mentioned, { type: NotificationType.MENTION, title: `Ai fost mentionat de ${senderName}`, message: preview, ...base },
+    await this.notifications.notify(mentioned, { type: NotificationType.MENTION, title: `Ai fost menționat de ${senderName}`, message: preview, ...base },
       { exclude: sender.id, pref: 'chat' });
     await this.notifications.notify(ids.filter((id) => !mentioned.includes(id)),
       { type: NotificationType.INFO, title: 'Mesaj nou', message: `${senderName}: ${preview}`, ...base }, { exclude: sender.id, pref: 'chat' });

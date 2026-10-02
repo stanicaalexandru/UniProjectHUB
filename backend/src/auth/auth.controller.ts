@@ -25,7 +25,7 @@ class RegisterDto {
   @IsOptional() @IsString() @MaxLength(200) department?: string;
   // Citim valoarea bruta din obj: conversia implicita ar transforma stringul "false" in true
   @Transform(({ obj }) => obj.acceptedTerms === true)
-  @Equals(true, { message: 'Trebuie sa accepti Termenii si Politica de confidentialitate' })
+  @Equals(true, { message: 'Trebuie să accepți Termenii și Politica de confidențialitate' })
   acceptedTerms: boolean;
 }
 class LoginDto {
@@ -41,7 +41,7 @@ class EmailDto {
 }
 class LoginPinDto {
   @IsString() pinToken: string;
-  @IsString() @Matches(/^\d{4,6}$/, { message: 'PIN-ul are intre 4 si 6 cifre' }) pin: string;
+  @IsString() @Matches(/^\d{4,6}$/, { message: 'PIN-ul are între 4 și 6 cifre' }) pin: string;
 }
 class RefreshDto {
   @IsString() refreshToken: string;

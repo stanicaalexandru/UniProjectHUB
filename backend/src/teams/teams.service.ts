@@ -68,8 +68,8 @@ export class TeamsService {
     if (!target) throw new BadRequestException(appError('USER_NOT_FOUND'));
     if (team.members.length >= team.maxMembers) throw new BadRequestException(appError('TEAM_FULL'));
     const member = await this.addMember(teamId, userId);
-    await this.notifications.notify([userId], { type: NotificationType.TEAM, title: 'Ai fost adaugat intr-o echipa',
-      message: `${actor.firstName} ${actor.lastName} te-a adaugat in echipa "${team.name}".`,
+    await this.notifications.notify([userId], { type: NotificationType.TEAM, title: 'Ai fost adăugat într-o echipă',
+      message: `${actor.firstName} ${actor.lastName} te-a adăugat în echipa „${team.name}”.`,
       actionUrl: '/teams', entityType: 'team', entityId: teamId }, { exclude: actor.id });
     return member;
   }
@@ -114,8 +114,8 @@ export class TeamsService {
       this.memberRepo.find({ where: { teamId, role: TeamRole.LEADER } }),
     ]);
     const recipients = [...new Set([...leaders.map((l) => l.userId), ...(await this.access.teamCoordinatorIds(teamId))])];
-    await this.notifications.notify(recipients, { type: NotificationType.TEAM, title: 'Cerere noua de inscriere',
-      message: `${requester?.firstName} ${requester?.lastName} doreste sa se inscrie in echipa "${team?.name}".`,
+    await this.notifications.notify(recipients, { type: NotificationType.TEAM, title: 'Cerere nouă de înscriere',
+      message: `${requester?.firstName} ${requester?.lastName} dorește să se înscrie în echipa „${team?.name}”.`,
       actionUrl: '/teams', entityType: 'team', entityId: teamId }, { exclude: userId });
     return req;
   }

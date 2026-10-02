@@ -4,11 +4,11 @@ A web platform for managing university student projects: teams, milestones, task
 evaluations with rubrics, chat and PDF reports, in one place. It started as my bachelor thesis and is
 maintained as a portfolio project.
 
-**Live demo:** [uniprojecthub-demo.vercel.app](https://uniprojecthub-demo.vercel.app) — one-click student and
+**Live demo:** [uniprojecthub-demo.vercel.app](https://uniprojecthub-demo.vercel.app). One-click student and
 professor accounts on the sign-in page; data is reset daily. The free API server sleeps when idle, so the first
 request can take up to a minute.
 
-**Stack:** Next.js 15 · React 19 · TypeScript · Tailwind CSS — NestJS 11 · TypeORM · PostgreSQL
+**Stack:** Next.js 15 · React 19 · TypeScript · Tailwind CSS (frontend), NestJS 11 · TypeORM · PostgreSQL (backend)
 
 The interface is available in **Romanian and English** (switchable at any time).
 
@@ -26,25 +26,25 @@ The interface is available in **Romanian and English** (switchable at any time).
 
 ## Features
 
-- **Roles** — students, professors (coordinators) and administrators, with permissions enforced on the
+- **Roles**: students, professors (coordinators) and administrators, with permissions enforced on the
   server for every project, team and document (the interface only shows the actions a user is allowed to do).
-- **Projects** — create from scratch or from a template (milestones generated automatically), statuses
+- **Projects**: create from scratch or from a template (milestones generated automatically), statuses
   from draft to completed, favorites, team or individual projects.
-- **Planning** — milestones with deliverables and attached documents, a Kanban task board,
+- **Planning**: milestones with deliverables and attached documents, a Kanban task board,
   a calendar (month/week) and a Gantt chart.
-- **Teams** — join requests handled by the team leader or professors, direct member management.
-- **Evaluations** — standard 100-point rubric per project phase; corrections of a completed evaluation
+- **Teams**: join requests handled by the team leader or professors, direct member management.
+- **Evaluations**: standard 100-point rubric per project phase; corrections of a completed evaluation
   require a reason and are kept in a history visible to the team.
-- **Collaboration** — per-team and per-project chat with mentions, replies, reactions and attachments,
+- **Collaboration**: per-team and per-project chat with mentions, replies, reactions and attachments,
   project comments, activity history, and a video-call button (Jitsi Meet).
-- **Notifications** — in-app and (optionally) by email, generated on the server for the people involved,
+- **Notifications**: in-app and (optionally) by email, generated on the server for the people involved,
   with per-user preferences.
-- **Analysis & reports** — a transparent, rule-based project health analysis (progress, time,
+- **Analysis & reports**: a transparent, rule-based project health analysis (progress, time,
   organization, documentation, stability) and PDF reports per project or per student.
-- **Accounts & privacy** — email verification, optional security PIN as a second sign-in step,
+- **Accounts & privacy**: email verification, optional security PIN as a second sign-in step,
   account lockout after repeated failures, account deletion with anonymization (GDPR), bilingual
   privacy policy and terms.
-- **Accessibility & responsiveness** — labelled form fields, keyboard-operable menus and dialogs,
+- **Accessibility & responsiveness**: labelled form fields, keyboard-operable menus and dialogs,
   screen-reader announcements, and a layout that works on phones.
 
 ## Architecture
@@ -115,7 +115,7 @@ The live demo runs on free tiers: **Vercel** (frontend), **Render** (API, `rende
 | Lint | `npm run lint` | `npm run lint` |
 | Types | `npm run typecheck` | `npx tsc --noEmit` |
 | Build | `npm run build` | `npm run build` |
-| Tests | `npm test` — authorization matrix against the running API | `npm test` — permission rules and project analysis (Vitest) |
+| Tests | `npm test`: authorization matrix against the running API | `npm test`: permission rules and project analysis (Vitest) |
 
 The same checks run on every push in GitHub Actions (`.github/workflows/ci.yml`), with a fresh
 PostgreSQL database.

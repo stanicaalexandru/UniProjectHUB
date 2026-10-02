@@ -184,14 +184,14 @@ export async function generateStudentPdf({ student, projects }: StudentReportDat
   });
 
   const done = <X,>(list: X[], pred: (x: X) => boolean) => `${list.filter(pred).length}/${list.length}`;
-  tablePage(ctx, `${t("projects.title")} — ${name}`, BLUE,
+  tablePage(ctx, `${t("projects.title")}: ${name}`, BLUE,
     ["#", t("projects.titleField"), t("projectDetail.status"), t("milestones.progress"), t("nav.milestones"), t("nav.tasks"), t("nav.evaluations")],
     projects.map((p, i) => [i + 1, p.title, t(`projectStatus.${p.status}`), `${p.progressPercentage || 0}%`,
       done(p.milestones, m => m.status === "completed"), done(p.tasks, x => x.status === "done"), done(p.evaluations, e => e.status === "completed")]), [248, 250, 252]);
 
   const completed = projects.flatMap(p => p.evaluations.filter(e => e.status === "completed").map(e => ({ e, p })));
   if (completed.length > 0) {
-    tablePage(ctx, `${t("nav.evaluations")} — ${name}`, GREEN,
+    tablePage(ctx, `${t("nav.evaluations")}: ${name}`, GREEN,
       [t("reports.pdf.project"), t("evaluations.phase"), t("reports.pdf.score"), t("reports.pdf.maxScore"), t("reports.pdf.percent"), t("evaluations.evaluator")],
       completed.map(({ e, p }) => [p.title.slice(0, 25), t(`evaluationPhase.${e.phase}`), e.totalScore ? Number(e.totalScore).toFixed(0) : "—",
         e.maxScore ? Number(e.maxScore).toFixed(0) : "—", e.totalScore && e.maxScore ? `${Math.round((Number(e.totalScore) / Number(e.maxScore)) * 100)}%` : "—", person(e.evaluator)]), [240, 253, 244]);
