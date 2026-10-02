@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    @apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100;
+  }
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { @apply bg-slate-300 dark:bg-slate-700; border-radius: 10px; }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center gap-1.5 px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-60;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center gap-1.5 px-4 py-2 bg-white hover:bg-slate-50 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-100 text-slate-700 text-sm font-medium rounded-lg border border-slate-200 dark:border-slate-700 transition-colors;
+  }
+  .btn-danger {
+    @apply inline-flex items-center gap-1.5 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-700 dark:bg-red-950/50 dark:hover:bg-red-950 dark:text-red-300 dark:border-red-900 text-sm font-medium rounded-lg border border-red-200 transition-colors disabled:opacity-60;
+  }
+  .card {
+    @apply bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden;
+  }
+  .input {
+    @apply w-full px-3 py-2 bg-white dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700 border border-slate-300 rounded-lg text-sm text-slate-900 placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all;
+  }
+  .label {
+    @apply block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1.5;
+  }
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold;
+  }
+  .sidebar-link {
+    @apply flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100 transition-all;
+  }
+  .sidebar-link.active {
+    @apply bg-blue-50 dark:bg-blue-950 text-blue-800 dark:text-blue-300 font-semibold;
+  }
+  .page-header {
+    @apply min-h-14 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center px-4 sm:px-6 py-2 gap-x-4 gap-y-2 flex-shrink-0;
+  }
+  .modal-overlay {
+    @apply fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-2 sm:p-4;
+  }
+  .modal {
+    @apply bg-white dark:bg-slate-900 rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 dark:border-slate-700;
+  }
+  .modal-header {
+    @apply flex items-center justify-between gap-3 p-4 sm:p-6 border-b border-slate-100 dark:border-slate-800;
+  }
+  .modal-body {
+    @apply p-4 sm:p-6 space-y-4;
+  }
+  .modal-footer {
+    @apply flex flex-wrap justify-end gap-3 px-4 sm:px-6 pb-4 sm:pb-6;
+  }
+  .table-row {
+    @apply border-b last:border-0 border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors;
+  }
+  /* Tipografie pentru paginile legale (Confidentialitate, Termeni) */
+  .legal h1 { @apply text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-50 mb-2; }
+  .legal h2 { @apply text-lg font-bold text-slate-900 dark:text-slate-50 mt-8 mb-3; }
+  .legal p, .legal li { @apply text-sm leading-relaxed text-slate-700 dark:text-slate-300; }
+  .legal p { @apply mb-3; }
+  .legal ul { @apply list-disc pl-5 space-y-1.5 mb-3; }
+  .legal a { @apply text-blue-700 dark:text-blue-400 underline; }
+  .legal strong { @apply text-slate-900 dark:text-slate-100; }
+  .legal table { @apply w-full text-sm border-collapse mb-3; }
+  .legal th, .legal td { @apply border border-slate-200 dark:border-slate-700 px-3 py-2 text-left align-top text-slate-700 dark:text-slate-300; }
+  .legal th { @apply bg-slate-50 dark:bg-slate-800 font-semibold text-slate-900 dark:text-slate-100; }
+}

@@ -1,0 +1,27 @@
+# Dependente si build
+node_modules/
+dist/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# Secrete si configurare locala (parole DB, Gmail, JWT, date operator)
+.env
+.env.local
+.env.*.local
+
+# Fisiere incarcate de utilizatori (documente, atasamente chat) - date, nu cod
+backend/uploads/
+
+# Backup-uri si dump-uri de baza de date
+*.dump
+*.sql.gz
+
+# Loguri si fisiere de sistem
+*.log
+install_log.txt
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

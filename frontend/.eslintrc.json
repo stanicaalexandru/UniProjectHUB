@@ -1,0 +1,9 @@
+{
+  "root": true,
+  "extends": ["next/core-web-vitals", "next/typescript"],
+  "rules": {
+    // Pozele de profil sunt data URL-uri base64 salvate in baza de date: next/image nu le poate optimiza
+    "@next/next/no-img-element": "off",
+    "@typescript-eslint/no-explicit-any": "error"
+  }
+}
