@@ -51,8 +51,7 @@ jobs:
       - name: Start API
         run: |
           node dist/main > api.log 2>&1 &
-          # Any HTTP answer means the server is up
-          timeout 60 bash -c 'until curl -s -o /dev/null http://localhost:4000/api/v1; do sleep 1; done'
+          timeout 60 bash -c 'until curl -sf -o /dev/null http://localhost:4000/api/v1/health; do sleep 1; done'
       - run: npm test
       - name: API log (on failure)
         if: failure()

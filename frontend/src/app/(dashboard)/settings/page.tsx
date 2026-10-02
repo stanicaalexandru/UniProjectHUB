@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useT } from "@/i18n";
 import { storedUser } from "@/lib/projects";
+import { isSharedDemoAccount } from "@/lib/showcase";
 import { Page, PageHeader, PageBody } from "@/components/ui/Page";
 import { ProfileSection } from "./ProfileSection";
 import { NotificationsSection } from "./NotificationsSection";
@@ -34,7 +35,8 @@ export default function SettingsPage() {
                 <SecuritySection user={user} onUserChange={updateUser} />
               </div>
             </div>
-            <DeleteAccountSection />
+            {/* Conturile demo comune nu pot fi sterse */}
+            {!isSharedDemoAccount(user.email) && <DeleteAccountSection />}
           </>
         )}
       </PageBody>

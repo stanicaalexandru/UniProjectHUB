@@ -6,6 +6,7 @@ import { useToast } from "@/components/ui/Feedback";
 import { Section } from "@/components/ui/Section";
 import { TextField } from "@/components/ui/Field";
 import { Alert } from "@/components/ui/Alert";
+import { isSharedDemoAccount } from "@/lib/showcase";
 import type { User } from "@/types";
 
 function PasswordForm({ user }: { user: User }) {
@@ -102,8 +103,12 @@ export function SecuritySection({ user, onUserChange }: { user: User; onUserChan
   const { t } = useT();
   return (
     <Section title={t("settings.securityTitle")}>
-      <PasswordForm user={user} />
-      <PinForm user={user} onUserChange={onUserChange} />
+      {isSharedDemoAccount(user.email) ? <Alert kind="info">{t("showcase.lockedSettings")}</Alert> : (
+        <>
+          <PasswordForm user={user} />
+          <PinForm user={user} onUserChange={onUserChange} />
+        </>
+      )}
     </Section>
   );
 }

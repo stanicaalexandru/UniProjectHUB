@@ -136,6 +136,7 @@ export const en: typeof ro = {
     UNAUTHENTICATED: "You need to be signed in.",
     OWN_ACCOUNT_ONLY: "You can only change your own account.",
     LAST_ADMIN: "You are the only administrator. Appoint another administrator before deleting your account.",
+    DEMO_ACCOUNT_LOCKED: "The demo account is shared by all visitors: password, PIN and deletion are disabled. Create your own account to try them.",
     USER_NOT_FOUND: "This user does not exist.",
     AVATAR_INVALID_TYPE: "The profile picture must be a PNG, JPEG, WEBP or GIF image.",
     AVATAR_TOO_LARGE: "The profile picture can be at most 2 MB.",
@@ -978,5 +979,17 @@ export const en: typeof ro = {
   },
   session: {
     switched: "You signed in with another account in a different tab. This page now shows that account; only one account can be active per browser.",
+  },
+  showcase: {
+    title: "Public demo",
+    intro: "Sign in instantly with a demo account or create your own. Data is reset automatically at least once a day; please don't enter real personal data.",
+    loginAs: {
+      student: "Sign in as student",
+      professor: "Sign in as professor",
+    },
+    waking: "The free demo server starts on the first request after a quiet period. It can take up to a minute, please wait.",
+    registerNotice: "Demo account: it's deleted automatically within 24 hours, together with everything you create. Your email is used only for the confirmation code and the app's notifications.",
+    professorNote: "In the demo, professor accounts are active right after email confirmation.",
+    lockedSettings: "The demo account is shared by all visitors, so password, PIN and account deletion are disabled. Create your own account to try them.",
   },
 };

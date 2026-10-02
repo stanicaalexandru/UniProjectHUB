@@ -8,6 +8,7 @@ import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Public } from '../common/decorators/public.decorator';
 import { appError } from '../common/errors';
 import { AvatarDto, ChangePasswordDto, DeleteAccountDto, ForgotPasswordDto, ResetPasswordDto, SetPinDto, UpdateUserDto } from './dto';
+import { assertNotSharedDemoAccount } from '../common/showcase';
 
 // Fiecare isi poate modifica doar propriul cont; adminul poate modifica orice cont
 function assertSelfOrAdmin(actor: User, id: string) {
@@ -30,13 +31,16 @@ export class UsersController {
   @Get('me') getMe(@CurrentUser() user: User) { return toSelfView(user); }
   // ID-ul vine din token, nu din URL: nimeni nu poate sterge contul altcuiva
   @Delete('me') deleteMe(@CurrentUser() user: User, @Body() dto: DeleteAccountDto) {
+    assertNotSharedDemoAccount(user);
     return this.usersService.deleteAccount(user.id, dto.password);
   }
   // PIN de securitate: activare/schimbare si dezactivare, ambele confirmate cu parola curenta
   @Put('me/pin') setPin(@CurrentUser() user: User, @Body() dto: SetPinDto) {
+    assertNotSharedDemoAccount(user);
     return this.usersService.setPin(user.id, dto.currentPassword, dto.pin);
   }
   @Delete('me/pin') removePin(@CurrentUser() user: User, @Body() dto: DeleteAccountDto) {
+    assertNotSharedDemoAccount(user);
     return this.usersService.removePin(user.id, dto.password);
   }
   @Get(':id') findOne(@Param('id') id: string) { return this.usersService.findOne(id); }
@@ -52,6 +56,7 @@ export class UsersController {
 
   @Patch(':id/change-password') async changePassword(@Param('id') id: string, @Body() dto: ChangePasswordDto, @CurrentUser() user: User) {
     assertSelf(user, id);
+    assertNotSharedDemoAccount(user);
     return this.usersService.changePassword(id, dto.currentPassword, dto.newPassword);
   }
 

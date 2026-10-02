@@ -89,6 +89,18 @@ Without `MAIL_USER` configured, emails (including verification codes) are printe
 **Demo accounts** (after `npm run seed`, password `password123`): `admin@example.com`, `prof@example.com`,
 `andrei.ionescu@student.example.com`.
 
+## Deployment (public demo)
+
+The live demo runs on free tiers: **Vercel** (frontend), **Render** (API, `render.yaml`) and **Supabase**
+(PostgreSQL, Frankfurt region).
+
+- `SHOWCASE_MODE=true` / `NEXT_PUBLIC_SHOWCASE=true` turn on demo mode: one-click demo accounts on the sign-in
+  page, shared demo accounts can't change their password or be deleted, and all data (including accounts created
+  by visitors) is reloaded from the seed on every start and every night.
+- The API start command (`npm run start:showcase`) applies the migrations, reloads the demo data, then starts the
+  server. Render's free instances sleep when idle, so the first request after a quiet period can take up to a minute.
+- Emails go through any SMTP provider (`MAIL_HOST`, `MAIL_USER`, `MAIL_PASS`, `MAIL_FROM`).
+
 ## Quality checks
 
 | | Backend | Frontend |

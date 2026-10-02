@@ -106,10 +106,11 @@ export function PrivacyRo() {
           coordonator al acelui proiect.
         </li>
         <li>
-          <strong>Furnizorul de email</strong> (în configurația actuală, <strong>Google Gmail</strong>): emailurile
-          aplicației (confirmarea contului, resetarea parolei, bun venit, notificări) trec prin serverele acestuia,
-          deci el primește adresa ta de email, numele și conținutul mesajului. Google poate prelucra date și în afara
-          Spațiului Economic European, pe baza propriilor garanții (clauze contractuale standard).
+          <strong>Furnizorul de email</strong>
+          {LEGAL.emailProvider ? <> (<strong>{LEGAL.emailProvider}</strong>)</> : <> (în configurația implicită, <strong>Google Gmail</strong>)</>}:
+          emailurile aplicației (confirmarea contului, resetarea parolei, bun venit, notificări) trec prin serverele
+          acestuia, deci el primește adresa ta de email, numele și conținutul mesajului. Furnizorul poate prelucra date
+          și în afara Spațiului Economic European, pe baza propriilor garanții (clauze contractuale standard).
         </li>
         <li>
           <strong>Jitsi Meet</strong> (serviciul public meet.jit.si, operat de 8x8 Inc.), <strong>doar dacă folosești
@@ -120,7 +121,7 @@ export function PrivacyRo() {
         <li>
           <strong>Furnizorul de hosting</strong>
           {LEGAL.hostingProvider
-            ? <>: <strong>{LEGAL.hostingProvider}</strong>, care găzduiește serverul aplicației.</>
+            ? <>: <strong>{LEGAL.hostingProvider}</strong>, care găzduiesc aplicația și baza de date. Ca orice furnizor de hosting, aceștia pot păstra pentru scurt timp adresele IP ale vizitatorilor în jurnalele lor de securitate.</>
             : <>: aplicația rulează pe un server propriu. Dacă va fi mutată la un furnizor de hosting, acesta va fi menționat aici.</>}
         </li>
       </ul>
@@ -155,6 +156,7 @@ export function PrivacyRo() {
       <ul>
         <li>Datele contului și conținutul creat: cât timp contul este activ.</li>
         <li>Codurile de confirmare și de resetare a parolei: expiră automat după 15 minute.</li>
+        {LEGAL.showcase && <li><strong>Demo public:</strong> conturile create de vizitatori și tot conținutul lor (proiecte, mesaje, fișiere) se șterg automat în cel mult 24 de ore, când datele demo sunt reîncărcate. Conturile demo afișate pe pagina de autentificare sunt fictive.</li>}
       </ul>
 
       <h2>7.1. Ștergerea contului</h2>

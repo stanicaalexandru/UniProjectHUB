@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { apiFetch, PENDING_EMAIL_KEY } from "@/lib/api";
+import { SHOWCASE } from "@/lib/showcase";
 import { useT, useErrorMessage } from "@/i18n";
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import { TextField, SelectField } from "@/components/ui/Field";
@@ -114,6 +115,7 @@ export default function RegisterPage() {
       {step === "form" && (
         <>
           <h2 className="text-slate-800 dark:text-slate-100 text-xl font-bold mb-6">{t("auth.registerTitle")}</h2>
+          {SHOWCASE && <Alert kind="info" className="mb-4">{t("showcase.registerNotice")}</Alert>}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <TextField label={t("auth.firstName")} autoComplete="given-name" required value={form.firstName} onChange={e => set("firstName", e.target.value)} placeholder={t("auth.firstNamePlaceholder")} />
@@ -121,7 +123,7 @@ export default function RegisterPage() {
             </div>
             <TextField label={t("auth.email")} type="email" autoComplete="email" required value={form.email} onChange={e => set("email", e.target.value)} placeholder={t("auth.emailPlaceholder")} />
             <SelectField label={t("auth.role")} value={form.role} onChange={e => set("role", e.target.value)}
-              hint={form.role === "professor" ? t("auth.professorNote") : undefined}>
+              hint={form.role === "professor" ? (SHOWCASE ? t("showcase.professorNote") : t("auth.professorNote")) : undefined}>
               <option value="student">{t("auth.roleStudent")}</option>
               <option value="professor">{t("auth.roleProfessor")}</option>
             </SelectField>

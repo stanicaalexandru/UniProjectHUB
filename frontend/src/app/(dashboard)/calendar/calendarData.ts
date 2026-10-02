@@ -10,7 +10,7 @@ export const EVENT_COLOR: Record<EventKind, string> = { projectStart: "bg-emeral
 export const DONE_COLOR = "bg-teal-700";
 export const eventColor = (e: CalEvent) => (e.done ? DONE_COLOR : EVENT_COLOR[e.kind]);
 
-// Data calendaristica locala in format AAAA-LL-ZZ (fara conversie UTC, care poate muta ziua)
+// Data calendaristica locala in format AAAA-LL-ZZ
 export const dayKey = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 export const parseDayKey = (key: string) => { const [y, m, d] = key.split("-").map(Number); return new Date(y, m - 1, d); };
 const toKey = (iso: string) => iso.split("T")[0];

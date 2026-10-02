@@ -11,6 +11,7 @@ import { NotificationsService } from '../notifications/notifications.service';
 import { NotificationType } from '../notifications/entities/notification.entity';
 import { generateCode, hashSecret, secretMatches, CODE_TTL_MS, MAX_CODE_ATTEMPTS } from './codes';
 import { appError } from '../common/errors';
+import { isShowcase } from '../common/showcase';
 
 export interface TokenPair {
   accessToken: string;
@@ -82,8 +83,9 @@ export class AuthService {
       throw new BadRequestException(appError('VERIFICATION_CODE_INVALID'));
     }
 
-    // Profesorii intra in asteptare pana ii aproba un admin; studentii sunt activi imediat
-    const status = user.role === UserRole.PROFESSOR ? UserStatus.PENDING_APPROVAL : UserStatus.ACTIVE;
+    // Profesorii intra in asteptare pana ii aproba un admin; studentii sunt activi imediat.
+    // In demo-ul public adminul nu e accesibil vizitatorilor, deci si profesorii sunt activati direct.
+    const status = user.role === UserRole.PROFESSOR && !isShowcase() ? UserStatus.PENDING_APPROVAL : UserStatus.ACTIVE;
     await this.userRepo.update(user.id, {
       status, emailVerificationToken: null, emailVerificationExpires: null, codeAttempts: 0,
     });

@@ -8,6 +8,7 @@ import AppDataSource from './data-source';
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 import * as path from 'path';
+import { randomBytes } from 'crypto';
 
 dotenv.config();
 
@@ -44,10 +45,10 @@ function messageTime(days: number, minute: number): Date {
 
 const UPLOAD_DIR = path.resolve(__dirname, '../../uploads');
 
-function writeDummyFile(filename: string, content: string): { filename: string; path: string; size: number } {
-  if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+function writeDummyFile(filename: string, content: string, dir = UPLOAD_DIR): { filename: string; path: string; size: number } {
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1e9)}-${filename}`;
-  const fullPath = path.join(UPLOAD_DIR, uniqueName);
+  const fullPath = path.join(dir, uniqueName);
   fs.writeFileSync(fullPath, content, 'utf-8');
   const size = fs.statSync(fullPath).size;
   return { filename: uniqueName, path: fullPath, size };
@@ -67,6 +68,8 @@ async function seed() {
     RESTART IDENTITY CASCADE
   `);
   console.log('Baza de date a fost golita.');
+  // Fisierele vechi (documente, atasamente) nu mai au corespondent in baza de date
+  fs.rmSync(UPLOAD_DIR, { recursive: true, force: true });
 
   const userRepo = dataSource.getRepository(User);
   const teamRepo = dataSource.getRepository(Team);
@@ -95,7 +98,11 @@ async function seed() {
     ...data,
   });
 
+  // In demo-ul public parola adminului nu e cea cunoscuta din cod: vine din SEED_ADMIN_PASSWORD sau e aleatoare
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD
+    || (process.env.SHOWCASE_MODE === 'true' ? randomBytes(24).toString('hex') : 'password123');
   await userRepo.save(mkUser({
+    password: adminPassword,
     firstName: 'Admin', lastName: 'Sistem', email: 'admin@example.com',
     role: UserRole.ADMIN, faculty: 'ACE', department: 'Administrare',
   }));
@@ -574,7 +581,8 @@ async function seed() {
     reactions: { '✅': [mariaPopa.id, vlad.id] },
   }));
 
-  const chatFile = writeDummyFile('Schema_tabelelor.txt', 'Schema tabelelor pentru masuratori:\n\n- sensor_readings(id, sensor_id, value, timestamp)\n- thresholds(id, project_id, min, max)');
+  // Atasamentele de chat stau in uploads/chat (acolo le cauta serverul la descarcare)
+  const chatFile = writeDummyFile('Schema_tabelelor.txt', 'Schema tabelelor pentru masuratori:\n\n- sensor_readings(id, sensor_id, value, timestamp)\n- thresholds(id, project_id, min, max)', path.join(UPLOAD_DIR, 'chat'));
   await messageRepo.save(messageRepo.create({
     roomId: roomAlpha.id, senderId: mariaPopa.id,
     content: 'Am pus aici schema tabelelor, sa fie la indemana.',

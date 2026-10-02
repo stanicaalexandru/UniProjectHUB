@@ -1,0 +1,60 @@
+# Render Blueprint: the API as a public demo (free plan, Frankfurt).
+# Values marked "sync: false" are filled in the Render dashboard; secrets marked "generateValue" are created by Render.
+services:
+  - type: web
+    name: uniprojecthub-api
+    runtime: node
+    plan: free
+    region: frankfurt
+    rootDir: backend
+    buildCommand: npm ci --include=dev && npm run build
+    # Applies migrations, reloads the demo data, then starts the server
+    startCommand: npm run start:showcase
+    healthCheckPath: /api/v1/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: NODE_ENV
+        value: production
+      - key: SHOWCASE_MODE
+        value: "true"
+      - key: TRUST_PROXY
+        value: "true"
+      - key: DB_SYNCHRONIZE
+        value: "false"
+      - key: DB_SSL
+        value: "true"
+      - key: MAX_FILE_SIZE
+        value: "5242880"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: SEED_ADMIN_PASSWORD
+        generateValue: true
+      # Supabase connection (Session pooler)
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        value: postgres
+      # Address of the frontend on Vercel (CORS)
+      - key: FRONTEND_URL
+        sync: false
+      # Email sending (SMTP, e.g. Brevo)
+      - key: MAIL_HOST
+        sync: false
+      - key: MAIL_PORT
+        value: "587"
+      - key: MAIL_USER
+        sync: false
+      - key: MAIL_PASS
+        sync: false
+      - key: MAIL_FROM
+        sync: false

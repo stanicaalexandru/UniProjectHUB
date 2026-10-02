@@ -20,6 +20,7 @@ export const ERROR_MESSAGES = {
   UNAUTHENTICATED: 'Trebuie să fii autentificat.',
   OWN_ACCOUNT_ONLY: 'Poți modifica doar propriul cont.',
   LAST_ADMIN: 'Ești singurul administrator. Numește alt administrator înainte să îți ștergi contul.',
+  DEMO_ACCOUNT_LOCKED: 'Contul demo este folosit de toți vizitatorii: parola, PIN-ul și ștergerea sunt dezactivate. Creează-ți propriul cont pentru a le încerca.',
   USER_NOT_FOUND: 'Utilizatorul nu există.',
   AVATAR_INVALID_TYPE: 'Poza de profil trebuie să fie o imagine PNG, JPEG, WEBP sau GIF.',
   AVATAR_TOO_LARGE: 'Poza de profil poate avea cel mult 2 MB.',

@@ -106,10 +106,11 @@ export function PrivacyEn() {
           coordinating professor.
         </li>
         <li>
-          <strong>The email provider</strong> (currently <strong>Google Gmail</strong>): the application’s emails
-          (account confirmation, password reset, welcome, notifications) pass through its servers, so it receives your
-          email address, name and the message content. Google may process data outside the European Economic Area
-          under its own safeguards (standard contractual clauses).
+          <strong>The email provider</strong>
+          {LEGAL.emailProvider ? <> (<strong>{LEGAL.emailProvider}</strong>)</> : <> (by default <strong>Google Gmail</strong>)</>}:
+          the application’s emails (account confirmation, password reset, welcome, notifications) pass through its
+          servers, so it receives your email address, name and the message content. The provider may process data
+          outside the European Economic Area under its own safeguards (standard contractual clauses).
         </li>
         <li>
           <strong>Jitsi Meet</strong> (the public meet.jit.si service, operated by 8x8 Inc.), <strong>only if you
@@ -120,7 +121,7 @@ export function PrivacyEn() {
         <li>
           <strong>The hosting provider</strong>
           {LEGAL.hostingProvider
-            ? <>: <strong>{LEGAL.hostingProvider}</strong>, which hosts the application server.</>
+            ? <>: <strong>{LEGAL.hostingProvider}</strong>, which host the application and the database. Like any hosting provider, they may keep visitors’ IP addresses for a short time in their security logs.</>
             : <>: the application runs on its own server. If it moves to a hosting provider, the provider will be listed here.</>}
         </li>
       </ul>
@@ -151,6 +152,7 @@ export function PrivacyEn() {
       <ul>
         <li>Account data and content you create: as long as the account is active.</li>
         <li>Confirmation and password-reset codes: they expire automatically after 15 minutes.</li>
+        {LEGAL.showcase && <li><strong>Public demo:</strong> accounts created by visitors and all their content (projects, messages, files) are deleted automatically within 24 hours, when the demo data is reloaded. The demo accounts shown on the sign-in page are fictional.</li>}
       </ul>
 
       <h2>7.1. Deleting your account</h2>

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { apiFetch, PENDING_EMAIL_KEY } from "@/lib/api";
+import { SHOWCASE, DEMO_ACCOUNTS, DEMO_PASSWORD } from "@/lib/showcase";
 import { useT, useErrorMessage } from "@/i18n";
 import { AuthLayout } from "@/components/layout/AuthLayout";
 import { TextField } from "@/components/ui/Field";
@@ -29,6 +30,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const [slow, setSlow] = useState(false);
 
   // Redirectionat aici dupa ce sesiunea a expirat (vezi authFetch)
   useEffect(() => {
@@ -47,14 +49,27 @@ export default function LoginPage() {
   };
 
   // Executa o actiune a formularului cu stare de incarcare si mesaj de eroare tradus
+  // Serverul demo gratuit "adoarme" cand nu e folosit: daca raspunsul intarzie, explicam de ce
   const run = async (action: () => Promise<void>) => {
-    setLoading(true); setError(""); setNotice("");
+    setLoading(true); setError(""); setNotice(""); setSlow(false);
+    const slowTimer = setTimeout(() => setSlow(true), 4000);
     try { await action(); } catch (err) { setError(errorMessage(err)); }
+    clearTimeout(slowTimer);
+    setSlow(false);
     setLoading(false);
   };
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    login(email, password);
+  };
+
+  const loginAsDemo = (demoEmail: string) => {
+    setEmail(demoEmail); setPassword(DEMO_PASSWORD);
+    login(demoEmail, DEMO_PASSWORD);
+  };
+
+  const login = (email: string, password: string) => {
     run(async () => {
       let data: LoginResponse;
       try {
@@ -119,6 +134,20 @@ export default function LoginPage() {
           <h2 className="text-slate-800 dark:text-slate-100 text-xl font-bold mb-6">{t("auth.loginTitle")}</h2>
           {notice && <Alert kind="success" className="mb-4">{notice}</Alert>}
           {error && <Alert className="mb-4">{error}</Alert>}
+          {slow && <Alert kind="info" className="mb-4">{t("showcase.waking")}</Alert>}
+          {SHOWCASE && (
+            <section className="mb-5 rounded-xl border border-blue-200 dark:border-blue-900 bg-blue-50 dark:bg-blue-950/40 p-4" aria-labelledby="demo-title">
+              <h3 id="demo-title" className="text-sm font-semibold text-blue-900 dark:text-blue-200 mb-1">{t("showcase.title")}</h3>
+              <p className="text-xs text-blue-900/80 dark:text-blue-200/80 mb-3">{t("showcase.intro")}</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {DEMO_ACCOUNTS.map(a => (
+                  <button key={a.key} type="button" disabled={loading} onClick={() => loginAsDemo(a.email)} className="btn-secondary justify-center text-xs">
+                    {t(`showcase.loginAs.${a.key}`)}
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
           <form onSubmit={handleLogin} className="space-y-4">
             <TextField label={t("auth.email")} type="email" autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} placeholder={t("auth.emailPlaceholder")} required />
             <TextField label={t("auth.password")} type="password" autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" required />

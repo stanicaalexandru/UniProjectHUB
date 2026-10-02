@@ -37,6 +37,7 @@ import { Comment } from './projects/entities/comment.entity';
 import { Activity } from './projects/entities/activity.entity';
 import { Invitation } from './teams/entities/invitation.entity';
 import { JoinRequest } from './teams/entities/join-request.entity';
+import { ShowcaseModule } from './showcase/showcase.module';
 
 @Module({
   imports: [
@@ -50,6 +51,8 @@ import { JoinRequest } from './teams/entities/join-request.entity';
         username: config.get('DB_USERNAME', 'postgres'),
         password: config.get('DB_PASSWORD', 'postgres'),
         database: config.get('DB_NAME', 'uniproject'),
+        // Bazele de date gazduite (ex. Supabase) cer conexiune criptata
+        ssl: config.get('DB_SSL') === 'true' ? { rejectUnauthorized: false } : false,
         entities: [
           User, Project, Team, TeamMember, Task, Milestone,
           Document, DocumentVersion, Evaluation, EvaluationCriteria, EvaluationRevision,
@@ -71,6 +74,7 @@ import { JoinRequest } from './teams/entities/join-request.entity';
       useFactory: (config: ConfigService) => [{ ttl: 60_000, limit: Number(config.get('THROTTLE_LIMIT')) || 300 }],
     }),
     ScheduleModule.forRoot(),
+    ShowcaseModule,
     AccessModule,
     AuthModule,
     UsersModule,

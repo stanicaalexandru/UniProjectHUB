@@ -13,7 +13,10 @@
     "migration:run": "typeorm-ts-node-commonjs migration:run -d src/database/data-source.ts",
     "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/database/data-source.ts",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "migration:run:prod": "typeorm migration:run -d dist/database/data-source.js",
+    "seed:prod": "node dist/database/seed.js",
+    "start:showcase": "npm run migration:run:prod && npm run seed:prod && node dist/main"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.0",

@@ -134,6 +134,7 @@ export const ro = {
     UNAUTHENTICATED: "Trebuie să fii autentificat.",
     OWN_ACCOUNT_ONLY: "Poți modifica doar propriul cont.",
     LAST_ADMIN: "Ești singurul administrator. Numește alt administrator înainte să îți ștergi contul.",
+    DEMO_ACCOUNT_LOCKED: "Contul demo este folosit de toți vizitatorii: parola, PIN-ul și ștergerea sunt dezactivate. Creează-ți propriul cont pentru a le încerca.",
     USER_NOT_FOUND: "Utilizatorul nu există.",
     AVATAR_INVALID_TYPE: "Poza de profil trebuie să fie o imagine PNG, JPEG, WEBP sau GIF.",
     AVATAR_TOO_LARGE: "Poza de profil poate avea cel mult 2 MB.",
@@ -976,5 +977,17 @@ export const ro = {
   },
   session: {
     switched: "Te-ai autentificat cu alt cont într-o altă filă. Pagina afișează acum contul acela; într-un browser poate fi activ un singur cont odată.",
+  },
+  showcase: {
+    title: "Demo public",
+    intro: "Intră direct cu un cont demo sau creează-ți unul. Datele se resetează automat cel puțin o dată pe zi; nu introduce date personale reale.",
+    loginAs: {
+      student: "Intră ca student",
+      professor: "Intră ca profesor",
+    },
+    waking: "Serverul demo gratuit pornește la prima cerere după o perioadă fără vizitatori. Poate dura până la un minut, te rog așteaptă.",
+    registerNotice: "Cont demo: se șterge automat în cel mult 24 de ore, împreună cu tot ce creezi. Emailul e folosit doar pentru codul de confirmare și pentru notificările aplicației.",
+    professorNote: "În demo, conturile de profesor sunt active imediat după confirmarea emailului.",
+    lockedSettings: "Contul demo e folosit de toți vizitatorii, așa că parola, PIN-ul și ștergerea contului sunt dezactivate. Creează-ți propriul cont ca să le încerci.",
   },
 };

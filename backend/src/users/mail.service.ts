@@ -73,7 +73,7 @@ export class MailService {
 
   private async send(to: string, subject: string, html: string, kind: string) {
     try {
-      await this.transporter.sendMail({ from: `"UniProject Hub" <${this.configService.get('MAIL_USER') || 'no-reply@localhost'}>`, to, subject, html });
+      await this.transporter.sendMail({ from: `"UniProject Hub" <${this.configService.get('MAIL_FROM') || this.configService.get('MAIL_USER') || 'no-reply@localhost'}>`, to, subject, html });
       if (this.consoleOnly) {
         // Versiunea text a emailului, ca un cod de confirmare sa poata fi citit direct din consola
         const text = html.replace(/<style[\s\S]*?<\/style>/g, '').replace(/<[^>]+>/g, ' ').replace(/&#39;/g, "'").replace(/&quot;/g, '"')
